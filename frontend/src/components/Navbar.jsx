@@ -6,8 +6,10 @@ const Navbar = () => {
         <h1 className='text-white text-2xl font-bold'>EduAssist</h1>
         <div className=''>
           <ul className='flex items-center list-none gap-1'>
-            <li className="mr-10">
-                <NavLink to='about-us'>About Us</NavLink>
+            <li>How It works</li>
+            <li>Get Started</li>
+            <li className='mr-10'>
+              <NavLink to='/about-us'>About Us</NavLink>
             </li>
             <li>
               <button className='bg-white py-1 px-4 rounded text-emerald-500'>

@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.loginBody {
+  background-image: url("./assets/background.jpeg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100%;
+}
+
+.welcome {
+  font-weight: bold;
+  font-size: 28px;
+  padding: 20px;
+  justify-content: center;
+}
+
+.login {
+  background-color: yellow;
+  width: 30%;
+  padding: 10px;
+  margin: auto;
+  display: flex;
+  border-radius: 10px;
+  height: 30%;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+.login button {
+  background-color: green;
+  padding: 6px;
+  margin: 3px;
+  margin-top: 4px;
+  border-radius: 5px;
+  align-items: center;
+  font-weight: bolder;
+}

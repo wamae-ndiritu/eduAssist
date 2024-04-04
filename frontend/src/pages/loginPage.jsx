@@ -10,7 +10,7 @@ const LoginPage = () => {
             placeholder="wamaimatu@gmail.com"
             className="border px-4 py-2 rounded-lg text-gray-600 focus:outline-amber-400"
           ></input>
-          <label className="py-1">Password</label>
+          <label className="px4">Password</label>
           <input
             type="password"
             placeholder="********"

@@ -1,34 +1,28 @@
+import { Container } from "postcss";
+
 const RegisterPage = () => {
   return (
-    <div>
-      <form>
-        <div>
-          <lable>Full Name</lable>
+    <div className="regBody">
+      <form className="regform">
+        <h1 className="reg">Register</h1>
+        <div className="w-2/5 m-auto bg-yellow">
+          <label>Full Name</label>
           <input type="text" placeholder="Matu Wamai" className=""></input>
-        </div>
-        <div>
-          <lable>Email</lable>
+          <label>Email</label>
           <input
             type="email"
             placeholder="wamaimatu@gmail.com"
             className=""
           ></input>
-        </div>
-        <div>
-          <lable>Contact</lable>
+          <label>Contact</label>
           <input type="number" placeholder="+254700699478" className=""></input>
-        </div>
-        <div>
-          <lable>Password</lable>
+          <label>Password</label>
           <input type="password" placeholder="Abcd123" className=""></input>
-        </div>
-        <div>
-          <lable>Confirm Password</lable>
+          <label>Confirm Password</label>
           <input type="password" className=""></input>
-        </div>
-        <div>
-          <lable>Full Name</lable>
+          <label>Full Name</label>
           <input type="text" placeholder="Matu Wamai" className=""></input>
+          <button>Submit</button>
         </div>
       </form>
     </div>

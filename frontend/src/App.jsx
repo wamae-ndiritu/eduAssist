@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./App.css";
+import "./index.css";
 import LoginPage from "./pages/loginPage";
 import RegisterPage from "./pages/registerPage";
 function App() {
@@ -7,8 +7,8 @@ function App() {
 
   return (
     <div>
-      <LoginPage />
-      {/* <RegisterPage /> */}
+      {/* // <LoginPage /> */}
+      <RegisterPage />
     </div>
   );
 }

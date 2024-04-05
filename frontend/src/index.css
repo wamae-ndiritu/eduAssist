@@ -64,4 +64,8 @@ label {
 .hero-overlay{
   background-color: rgb(0, 0, 0, 0.5);
 }
+
+.custom-stepper-icon svg{
+  background-color: rgb(110 231 183) !important;
+}
  /* Hero section */

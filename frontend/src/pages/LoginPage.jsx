@@ -34,7 +34,7 @@ const LoginPage = () => {
             />
           </div>
           <button className="bg-emerald-300 py-1 px-4 text-white rounded text-lg font-semibold w-full">
-            Sing In
+            Sign In
           </button>
         </form>
       </div>

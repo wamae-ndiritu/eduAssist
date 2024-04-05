@@ -12,7 +12,7 @@ const HomePage = () => {
             further, EduAssit got you covered!!
           </p>
           <p className="p-3 font-semibold text-xl">
-            Singup with us for free! make you application and wait for your
+            Singup with us for free! make your application and wait for your
             dream of studing become a reality beside having no finances to fund
             your studies.
           </p>

@@ -5,7 +5,7 @@ const HomePage = () => {
     <div>
       <Navbar />
       <div className="bg-white h-screen grid md:grid-cols-5">
-        <section className="col-span-2 bg-emerald-100 text-black ">
+        <section className="col-span-2 text-black bg-cyan-200 ">
           <h1 className="p-4 text-2xl font-bold">EduAssist Connect Platform</h1>
           <p className="p-3 font-semibold text-xl ">
             Are you looking for education fanancial assist? Then look no
@@ -17,7 +17,7 @@ const HomePage = () => {
             your studies.
           </p>
         </section>
-        <section className="col-span-3">
+        <section className="col-span-3 bg-teal-100">
           <h1 className="text-2xl  item-center pt-4 m-auto pl-10 font-bold">
             About Us
           </h1>

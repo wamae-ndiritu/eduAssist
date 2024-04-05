@@ -10,7 +10,7 @@ const LoginPage = () => {
           donors.
         </p>
         <form className="w-1/3 rounded bg-white p-4">
-          <h1 className="text-center text-2xl font-semibold">Register</h1>
+          <h1 className="text-center text-2xl font-semibold">Login</h1>
           <div className="flex flex-col mb-2">
             <label htmlFor="name" className="py-1 text-gray-600">
               User Name
@@ -33,6 +33,9 @@ const LoginPage = () => {
               id="password"
             />
           </div>
+          <button className="bg-emerald-300 py-1 px-4 text-white rounded text-lg font-semibold w-full">
+            Sing In
+          </button>
         </form>
       </div>
     </div>

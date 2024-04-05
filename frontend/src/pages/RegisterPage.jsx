@@ -82,7 +82,6 @@ const RegisterPage = () => {
           <button className="bg-emerald-300 py-1 px-4 text-white rounded text-lg font-semibold w-full">
             Submit
           </button>
-          <div></div>
         </form>
       </div>
     </div>

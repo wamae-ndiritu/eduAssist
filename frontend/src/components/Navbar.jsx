@@ -2,7 +2,7 @@ import {NavLink} from "react-router-dom"
 
 const Navbar = () => {
     return (
-      <div className='bg-emerald-300 p-4 flex justify-between'>
+      <div className='h-18 border bg-emerald-300 p-4 flex justify-between'>
         <h1 className='text-white text-2xl font-bold'>EduAssist</h1>
         <div className=''>
           <ul className='flex items-center list-none gap-1'>

@@ -53,3 +53,15 @@ input {
 label {
   margin-left: 10px;
 }  */
+
+/* Hero section */
+.hero{
+  background-image: url('/financial-aid.jpeg');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.hero-overlay{
+  background-color: rgb(0, 0, 0, 0.5);
+}
+ /* Hero section */

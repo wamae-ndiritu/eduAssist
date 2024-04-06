@@ -1,6 +1,14 @@
 import { NavLink } from "react-router-dom";
+import { useState } from "react";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 
 const LoginPage = () => {
+  const [showPass, setShowPass] = useState(false);
+
+  const togglePass = (e) => {
+    e.preventDefault();
+    setShowPass(!showPass);
+  };
   return (
     <div className="h-screen relative regBody">
       <div className="flex flex-col items-center absolute top-0 bottom-0 left-0 right-0 overlay">
@@ -29,11 +37,15 @@ const LoginPage = () => {
               Password
             </label>
             <input
-              type="password"
+              type={showPass ? "text" : "password"}
               placeholder="********"
               className="border py-1 px-4 focus:outline-emerald-300"
               id="password"
             />
+            <button className="flex gap-1" onClick={togglePass}>
+              <RemoveRedEyeIcon />
+              <p>Show password</p>
+            </button>
           </div>
           <button className="bg-emerald-300 py-1 px-4 text-white rounded text-lg font-semibold w-full">
             Sign In

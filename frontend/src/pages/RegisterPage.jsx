@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 const RegisterPage = () => {
   return (
     <div className="h-screen relative regBody">
@@ -77,7 +78,11 @@ const RegisterPage = () => {
               placeholder=""
               className="border pt-1 px-4 focus:outline-emerald-300"
               id="phone number"
-            />
+            />{" "}
+            <div className="flex gap-1">
+              <RemoveRedEyeIcon />
+              <p>Show password</p>
+            </div>
           </div>
 
           <button className="bg-emerald-300 py-1 px-4 text-white rounded text-lg font-semibold w-full">

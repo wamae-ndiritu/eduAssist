@@ -19,9 +19,9 @@ const steps = [
   },
   {
     label: "Make an application",
-    content: "fees structure, current fee statement etc.",
+    content:
+      "Initialize a new financial application, provide fees structure, current fee statement etc.",
   },
-  "Initialize a new financial application, provid",
   {
     label: "Track application progress",
     content:

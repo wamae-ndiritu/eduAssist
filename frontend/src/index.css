@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-*{
+* {
   padding: 0;
   margin: 0;
 }
@@ -15,54 +15,16 @@
   position: relative;
 }
 
-.overlay{
-  background-color: rgb(110, 231, 183, 0.6);
-
-}
-
-
-/* .login,
-.regform {
-  background-color: yellow;
-  width: 30%;
-  padding: 10px;
-  margin: auto;
-  display: flex;
-  border-radius: 10px;
-  height: 30%;
-  flex-direction: column;
-  justify-content: center;
-  margin-bottom: 10px;
-}
-.login button,
-.regform button {
-  background-color: green;
-  padding: 6px;
-  margin: auto;
-  /* margin-top: 4px; */
-  /* border-radius: 5px;
-  align-items: center;
-  font-weight: bolder;
-}
-input {
-  padding: 3px;
-  -left: 10px;
-  display: flex;
-  flex-direction: column;
-}
-label {
-  margin-left: 10px;
-}  */
-
-/* Hero section */
-.hero{
-  background-image: url('/financial-aid.jpeg');
-  background-repeat: no-repeat;
+.homeBody {
+  background-image: url("./assets/financial-aid.jpeg");
   background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
 }
 
-.hero-overlay{
-  background-color: rgb(0, 0, 0, 0.5);
+.overlay {
+  background-color: rgb(110, 231, 183, 0.6);
 }
 
 .custom-stepper-icon svg{

@@ -1,13 +1,12 @@
-import {BrowserRouter as Router, Routes, Route} from "react-router-dom"
-import RegisterPage from "./pages/RegisterPage";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./index.css";
+import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import ProfilePage from "./pages/ProfilePage";
 function App() {
-
   return (
     <Router>
       <Routes>

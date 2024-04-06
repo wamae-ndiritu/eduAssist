@@ -19,12 +19,13 @@ const steps = [
   },
   {
     label: "Make an application",
-    content:
-      "Initialize a new financial application, provide fees structure, current fee statement etc.",
+    content: "fees structure, current fee statement etc.",
   },
+  "Initialize a new financial application, provid",
   {
     label: "Track application progress",
-    content: "Get notification upon application review by any donor, send and receive private message with potential donors."
+    content:
+      "Get notification upon application review by any donor, send and receive private message with potential donors.",
   },
 ];
 
@@ -82,7 +83,7 @@ export default function HorizontalLinearStepper() {
           const labelProps = {};
           if (isStepOptional(index)) {
             labelProps.optional = (
-              <Typography variant='caption'>Optional</Typography>
+              <Typography variant="caption">Optional</Typography>
             );
           }
           if (isStepSkipped(index)) {
@@ -102,9 +103,13 @@ export default function HorizontalLinearStepper() {
       </Stepper>
       {activeStep === steps.length ? (
         <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1, display: "flex", alignItems: "center", gap: 3 }}>
+          <Typography
+            sx={{ mt: 2, mb: 1, display: "flex", alignItems: "center", gap: 3 }}
+          >
             <p>Ready to start the process?</p>
-            <button className="bg-emerald-300 text-white rounded-full px-16 py-2">Get Started</button>
+            <button className="bg-emerald-300 text-white rounded-full px-16 py-2">
+              Get Started
+            </button>
           </Typography>
           <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
             <Box sx={{ flex: "1 1 auto" }} />
@@ -113,10 +118,12 @@ export default function HorizontalLinearStepper() {
         </React.Fragment>
       ) : (
         <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>{steps[activeStep].content}</Typography>
+          <Typography sx={{ mt: 2, mb: 1 }}>
+            {steps[activeStep].content}
+          </Typography>
           <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
             <Button
-              color='inherit'
+              color="inherit"
               disabled={activeStep === 0}
               onClick={handleBack}
               sx={{ mr: 1 }}
@@ -125,7 +132,7 @@ export default function HorizontalLinearStepper() {
             </Button>
             <Box sx={{ flex: "1 1 auto" }} />
             {isStepOptional(activeStep) && (
-              <Button color='inherit' onClick={handleSkip} sx={{ mr: 1 }}>
+              <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
                 Skip
               </Button>
             )}

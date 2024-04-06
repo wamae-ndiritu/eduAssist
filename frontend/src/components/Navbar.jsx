@@ -1,4 +1,4 @@
-import {NavLink} from "react-router-dom"
+import { NavLink } from "react-router-dom";
 
 const Navbar = () => {
     return (
@@ -16,20 +16,24 @@ const Navbar = () => {
             <li className=''>
               <NavLink to='/profile'>Profile</NavLink>
             </li>
-            <li>
-              <button className='bg-white py-1 px-4 rounded text-emerald-500'>
+          <li>
+            <NavLink to="/register">
+              <button className="bg-white py-1 px-4 rounded text-emerald-500">
                 Sign Up
               </button>
-            </li>
-            <li>
-              <button className='bg-black py-1 px-4 rounded text-white'>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/login">
+              <button className="bg-black py-1 px-4 rounded text-white">
                 Sign In
               </button>
-            </li>
-          </ul>
-        </div>
+            </NavLink>
+          </li>
+        </ul>
       </div>
-    );
-}
+    </div>
+  );
+};
 
 export default Navbar;

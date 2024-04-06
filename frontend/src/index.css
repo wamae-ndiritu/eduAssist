@@ -15,14 +15,43 @@
   position: relative;
 }
 
-.homeBody {
+/* .homeBody {
   background-image: url("./assets/financial-aid.jpeg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   position: relative;
-}
+} */
 
 .overlay {
   background-color: rgb(110, 231, 183, 0.6);
 }
+
+/* Hero section */
+.hero {
+  background-image: url('/financial-aid.jpeg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 70vh !important;
+}
+
+.hero-overlay {
+  background-color: rgb(0, 0, 0, 0.5);
+}
+
+/* Hero section */
+
+.custom-stepper-icon svg {
+  background-color: rgb(110 231 183) !important;
+}
+ /* Hero section */
+
+ /* Profile section */
+ .edit-image-badge{
+  right: 5px;
+  bottom: 10px;
+ }
+
+ .image-input{
+  display: none;
+ }

@@ -38,12 +38,11 @@ const LoginPage = () => {
           <button className="bg-emerald-300 py-1 px-4 text-white rounded text-lg font-semibold w-full">
             Sign In
           </button>
-          <section className="flex gap-2">
-            <p>If new to EduAssist</p>
-            <div>
-              <NavLink to="/register" />
-              <button>Sign Up</button>
-            </div>
+          <section className="flex  gap-1 text-emerald-500">
+            <p>Don`t have an account,</p>
+            <NavLink to="/register" className="underline ">
+              <p>Sign up</p>
+            </NavLink>
           </section>
         </form>
       </div>

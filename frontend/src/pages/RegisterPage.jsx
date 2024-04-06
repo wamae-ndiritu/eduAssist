@@ -1,3 +1,4 @@
+import { NavLink } from "react-router-dom";
 const RegisterPage = () => {
   return (
     <div className="h-screen relative regBody">
@@ -82,6 +83,12 @@ const RegisterPage = () => {
           <button className="bg-emerald-300 py-1 px-4 text-white rounded text-lg font-semibold w-full">
             Submit
           </button>
+          <section className="flex  gap-1 text-emerald-500">
+            <p>Already have an account,</p>
+            <NavLink to="/login" className="underline ">
+              <p>Sign In</p>
+            </NavLink>
+          </section>
         </form>
       </div>
     </div>

@@ -69,3 +69,13 @@ label {
   background-color: rgb(110 231 183) !important;
 }
  /* Hero section */
+
+ /* Profile section */
+ .edit-image-badge{
+  right: 5px;
+  bottom: 10px;
+ }
+
+ .image-input{
+  display: none;
+ }

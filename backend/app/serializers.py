@@ -26,4 +26,4 @@ class BeneficiarySerializer(serializers.ModelSerializer):
 class BeneficiaryReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Beneficiary
-        fields = ['user']
+        fields = '__all__'

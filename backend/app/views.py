@@ -25,13 +25,13 @@ def create_user(request):
                     # Delete the user if beneficiary data is not valid
                     user.delete() 
                     return Response(beneficiary_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
             return Response(user_serializer.data, status=status.HTTP_201_CREATED)
         return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # Login
 @api_view(['POST'])
 def login(request):
+    print(request.data)
     data = request.data
     password = data.get('password', None)
     email = data.get('email', None)

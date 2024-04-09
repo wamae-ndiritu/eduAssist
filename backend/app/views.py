@@ -25,7 +25,21 @@ def create_user(request):
                     # Delete the user if beneficiary data is not valid
                     user.delete() 
                     return Response(beneficiary_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            return Response(user_serializer.data, status=status.HTTP_201_CREATED)
+                # Generate JWT token
+                refresh = RefreshToken.for_user(user)
+                token = {
+                    'refresh': str(refresh),
+                    'access': str(refresh.access_token),
+                }
+
+                res_data = {
+                    'user': {
+                        **user_serializer.data,
+                        **beneficiary_serializer.data,
+                    },
+                    'token': token
+                }
+                return Response(res_data, status=status.HTTP_201_CREATED)
         return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # Login

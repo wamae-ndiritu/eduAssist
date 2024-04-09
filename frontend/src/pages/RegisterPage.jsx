@@ -29,7 +29,7 @@ const RegisterPage = () => {
   }
 
   useEffect(() => {
-    if (user){
+    if (user?.token){
       setUserInfo({
         full_name: "",
         email: "",
@@ -53,6 +53,8 @@ const RegisterPage = () => {
       });
     }
   }, [navigate, user, error])
+
+  console.log(user)
 
   return (
     <div className='h-screen py-16 relative regBody bg-emerald-500'>

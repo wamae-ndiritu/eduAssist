@@ -7,7 +7,6 @@ import {
 import axios from "redaxios";
 import { BASE_URL } from "../../URL";
 
-
 // Register user
 export const register = (userInfo) => async (dispatch) => {
   try {
@@ -15,11 +14,14 @@ export const register = (userInfo) => async (dispatch) => {
 
     const { data } = await axios.post(`${BASE_URL}/users/create/`, userInfo);
 
-    console.log(data);
     dispatch(userLoginSuccess(data));
     localStorage.setItem("userInfo", JSON.stringify(data));
   } catch (err) {
-    const errMsg = err?.data ? err.data.message : err.statusText;
+    const errMsg = err?.data
+      ? err.data.message
+      : err.statusText
+      ? err.statusText
+      : err.message;
     dispatch(userLoginFail(errMsg));
   }
 };
@@ -31,11 +33,14 @@ export const login = (userData) => async (dispatch) => {
 
     const { data } = await axios.post(`${BASE_URL}/users/login/`, userData);
 
-    console.log(data);
     dispatch(userLoginSuccess(data));
     localStorage.setItem("userInfo", JSON.stringify(data));
   } catch (err) {
-    const errMsg = err?.data ? err.data.message : err.statusText;
+    const errMsg = err?.data
+      ? err.data.message
+      : err.statusText
+      ? err.statusText
+      : err.message;
     dispatch(userLoginFail(errMsg));
   }
 };

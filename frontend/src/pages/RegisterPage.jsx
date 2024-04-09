@@ -3,6 +3,7 @@ import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import { useEffect, useState } from "react";
 import {useDispatch, useSelector} from "react-redux";
 import { register } from "../redux/actions/userActions";
+import { resetUserErr } from "../redux/slices/userSlices";
 
 
 const RegisterPage = () => {
@@ -54,7 +55,16 @@ const RegisterPage = () => {
     }
   }, [navigate, user, error])
 
-  console.log(user)
+    useEffect(() => {
+      if (error) {
+        const timer = setTimeout(() => {
+          dispatch(resetUserErr());
+        }, 2000);
+
+        // Clear the timeout when the component unmounts or when useEffect runs again
+        return () => clearTimeout(timer);
+      }
+    }, [dispatch, error]);
 
   return (
     <div className='h-screen py-16 relative regBody bg-emerald-500'>

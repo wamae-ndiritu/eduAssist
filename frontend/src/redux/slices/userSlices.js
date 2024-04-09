@@ -29,6 +29,9 @@ export const userSlice = createSlice({
     clearUserState: (state) => {
       state.userInfo = null;
     },
+    resetUserErr: (state) => {
+      state.error = null;
+    },
   },
 });
 
@@ -37,6 +40,7 @@ export const {
   userLoginSuccess,
   userLoginFail,
   clearUserState,
+  resetUserErr
 } = userSlice.actions;
 
 export default userSlice.reducer;

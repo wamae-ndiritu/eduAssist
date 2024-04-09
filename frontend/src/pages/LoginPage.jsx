@@ -14,7 +14,6 @@ const LoginPage = () => {
     email: "",
     password: "",
   });
-
   const handleChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
   };
@@ -47,7 +46,7 @@ const LoginPage = () => {
   }, [navigate, userInfo, error]);
 
   useEffect(() => {
-    if (error){
+    if (error) {
       const timer = setTimeout(() => {
         dispatch(resetUserErr());
       }, 2000);
@@ -58,71 +57,71 @@ const LoginPage = () => {
   }, [dispatch, error]);
 
   return (
-    <div className='h-screen relative regBody'>
-      <div className='flex flex-col items-center absolute top-0 bottom-0 left-0 right-0 overlay px-4'>
-        <h1 className='mt-40 text-white text-4xl capitalize font-semibold mb-2'>
+    <div className="h-screen relative regBody">
+      <div className="flex flex-col items-center absolute top-0 bottom-0 left-0 right-0 overlay px-4">
+        <h1 className="mt-40 text-white text-4xl capitalize font-semibold mb-2">
           eduAssist Connect Platform
         </h1>
-        <p className='text-white py-2 text-gray-400'>
+        <p className="text-white py-2 text-gray-400">
           A place to connect students seeking for financial aid with potential
           donors.
         </p>
         <form
-          className='w-full md:w-2/5 rounded bg-white p-4 border border-emerald-500'
+          className="w-full md:w-2/5 rounded bg-white p-4 border border-emerald-500"
           onSubmit={handleSubmit}
         >
-          <h1 className='text-center text-2xl font-semibold'>Login</h1>
+          <h1 className="text-center text-2xl font-semibold">Login</h1>
           {loading ? (
             <p>Loading...</p>
           ) : (
             error && (
-              <p className='bg-red-500 py-2 px-4 rounded text-white'>{error}</p>
+              <p className="bg-red-500 py-2 px-4 rounded text-white">{error}</p>
             )
           )}
-          <div className='flex flex-col mb-2'>
-            <label htmlFor='email' className='py-1 text-gray-600'>
+          <div className="flex flex-col mb-2">
+            <label htmlFor="email" className="py-1 text-gray-600">
               Email
             </label>
             <input
-              type='email'
-              placeholder='Wamai'
-              className='border py-2 px-2 focus:outline-emerald-300'
-              id='email'
-              name='email'
+              type="email"
+              placeholder="Wamai"
+              className="border py-2 px-2 focus:outline-emerald-300"
+              id="email"
+              name="email"
               value={userData.email}
               onChange={handleChange}
             />
           </div>
-          <div className='flex flex-col mb-2'>
-            <label htmlFor='password' className='py-1 text-gray-600'>
+          <div className="flex flex-col mb-2">
+            <label htmlFor="password" className="py-1 text-gray-600">
               Password
             </label>
             <input
               type={showPass ? "text" : "password"}
-              placeholder='********'
-              className='border py-2 px-2 focus:outline-emerald-300'
-              id='password'
-              name='password'
+              placeholder="********"
+              className="border py-2 px-2 focus:outline-emerald-300"
+              id="password"
+              name="password"
               value={userData.password}
               onChange={handleChange}
             />
           </div>
           <button
-            className='flex gap-3 my-3 text-gray-600'
+            className="flex gap-3 my-3 text-gray-600"
             onClick={togglePass}
           >
             <RemoveRedEyeIcon />
             <p>Show password</p>
           </button>
           <button
-            type='submit'
-            className='bg-emerald-300 py-1 px-4 text-white rounded text-lg font-semibold w-full'
+            type="submit"
+            className="bg-emerald-300 py-1 px-4 text-white rounded text-lg font-semibold w-full"
           >
             Sign In
           </button>
-          <section className='flex  gap-1 text-emerald-500'>
+          <section className="flex  gap-1 text-emerald-500">
             <p>Don&apos;t have an account?</p>
-            <NavLink to='/register' className='underline capitalize'>
+            <NavLink to="/register" className="underline capitalize">
               <p>Sign up</p>
             </NavLink>
           </section>

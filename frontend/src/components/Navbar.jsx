@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import CastForEducationIcon from "@mui/icons-material/CastForEducation";
 import {useSelector, useDispatch} from "react-redux";
 import { logout } from "../redux/actions/userActions";
@@ -13,10 +13,10 @@ const Navbar = () => {
   return (
     <div className='flex justify-between items-end border bg-emerald-300 p-4'>
       <div className='w-full md:w-auto flex justify-between items-center'>
-        <div className='flex items-center gap-3'>
+        <Link to='/' className='flex items-center gap-3'>
           <CastForEducationIcon />
           <h1 className='text-white text-2xl font-bold'>EduAssist</h1>
-        </div>
+        </Link>
         <button className='block md:hidden focus:outline-none'>
           {/* Button for mobile menu toggle */}
           <svg

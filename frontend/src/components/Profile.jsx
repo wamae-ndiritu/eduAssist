@@ -56,59 +56,59 @@ const Profile = () => {
         <section className='w-full grid grid-cols-1 md:grid-cols-4 gap-4 my-3'>
           <div className='col-span-1 md:col-span-2 border rounded p-4'>
             <h6 className='mb-2 font-semibold'>Personal Information</h6>
-            <div className='w-full flex gap-3 items-center mb-2'>
-              <label htmlFor='location' className='w-1/5'>
+            <div className='w-full flex flex-col md:flex-row gap-3 md:items-center mb-2'>
+              <label htmlFor='location' className='md:w-1/5'>
                 Location
               </label>
               <input
                 type='text'
                 id='location'
                 placeholder='Nairobi'
-                className='w-4/5 border px-4 py-2 rounded focus:outline-emerald-300'
+                className='md:w-4/5 border px-4 py-2 rounded focus:outline-emerald-300'
               />
             </div>
-            <div className='w-full flex gap-3 items-center mb-2'>
-              <label htmlFor='city' className='w-1/5'>
+            <div className='w-full flex flex-col md:flex-row gap-3 md:items-center mb-2'>
+              <label htmlFor='city' className='md:w-1/5'>
                 City
               </label>
               <input
                 type='text'
                 id='city'
                 placeholder='Nairobi'
-                className='w-4/5 border px-4 py-2 rounded focus:outline-emerald-300'
+                className='md:w-4/5 border px-4 py-2 rounded focus:outline-emerald-300'
               />
             </div>
-            <div className='w-full flex gap-3 items-center mb-2'>
-              <label htmlFor='address' className='w-1/5'>
+            <div className='w-full flex flex-col md:flex-row gap-3 md:items-center mb-2'>
+              <label htmlFor='address' className='md:w-1/5'>
                 Address
               </label>
               <input
                 type='text'
                 id='address'
                 placeholder='Nairobi'
-                className='w-4/5 border px-4 py-2 rounded focus:outline-emerald-300'
+                className='md:w-4/5 border px-4 py-2 rounded focus:outline-emerald-300'
               />
             </div>
-            <div className='w-full flex gap-3 items-center mb-2'>
-              <label htmlFor='zip' className='w-1/5'>
+            <div className='w-full flex flex-col md:flex-row gap-3 md:items-center mb-2'>
+              <label htmlFor='zip' className='md:w-1/5'>
                 ZIP Code
               </label>
               <input
                 type='number'
                 id='zip'
                 placeholder='00100'
-                className='w-4/5 border px-4 py-2 rounded focus:outline-emerald-300'
+                className='md:w-4/5 border px-4 py-2 rounded focus:outline-emerald-300'
               />
             </div>
-            <div className='w-full flex gap-3 items-center mb-2'>
-              <label htmlFor='birth' className='w-1/5'>
+            <div className='w-full flex flex-col md:flex-row gap-3 md:items-center mb-2'>
+              <label htmlFor='birth' className='md:w-1/5'>
                 Date of Birth
               </label>
               <input
                 type='date'
                 id='birth'
                 placeholder='00100'
-                className='w-4/5 border px-4 py-2 rounded focus:outline-emerald-300'
+                className='md:w-4/5 border px-4 py-2 rounded focus:outline-emerald-300'
               />
             </div>
           </div>
@@ -119,23 +119,23 @@ const Profile = () => {
                 (University/College/TVETs)
               </span>
             </h6>
-            <div className='w-full flex gap-3 items-center mb-2'>
-              <label htmlFor='institution' className='w-2/5'>
+            <div className='w-full flex flex-col md:flex-row gap-3 md:items-center mb-2'>
+              <label htmlFor='institution' className='md:w-2/5'>
                 Institution Name
               </label>
               <input
                 type='text'
                 id='institution'
                 placeholder='University of Nairobi'
-                className='w-3/5 border px-4 py-2 rounded focus:outline-emerald-300'
+                className='md:w-3/5 border px-4 py-2 rounded focus:outline-emerald-300'
               />
             </div>
-            <div className='w-full flex gap-3 items-center mb-2'>
-              <label htmlFor='level' className='w-2/5'>
+            <div className='w-full flex flex-col md:flex-row gap-3 md:items-center mb-2'>
+              <label htmlFor='level' className='md:w-2/5'>
                 Education Level
               </label>
               <select
-                className='w-3/5 border px-4 py-2 rounded focus:outline-emerald-300'
+                className='md:w-3/5 border px-4 py-2 rounded focus:outline-emerald-300'
                 id='level'
               >
                 <option>Certificate</option>
@@ -144,42 +144,42 @@ const Profile = () => {
                 <option>Postgraduate</option>
               </select>
             </div>
-            <div className='w-full flex gap-3 items-center mb-2'>
-              <label htmlFor='course_name' className='w-2/5'>
+            <div className='md:w-full flex flex-col md:flex-row gap-3 md:items-center mb-2'>
+              <label htmlFor='course_name' className='md:w-2/5'>
                 Course Name
               </label>
               <input
                 type='text'
                 id='course_name'
                 placeholder='Bachelor of Education ICT'
-                className='w-3/5 border px-4 py-2 rounded focus:outline-emerald-300'
+                className='md:w-3/5 border px-4 py-2 rounded focus:outline-emerald-300'
               />
             </div>
-            <div className='w-full flex gap-3 items-center mb-2'>
-              <label htmlFor='year_joined' className='w-2/5'>
+            <div className='w-full flex flex-col md:flex-row gap-3 md:items-center mb-2'>
+              <label htmlFor='year_joined' className='md:w-2/5'>
                 Year Joined
               </label>
               <input
                 type='number'
                 id='year_joined'
                 placeholder='2020'
-                className='w-3/5 border px-4 py-2 rounded focus:outline-emerald-300'
+                className='md:w-3/5 border px-4 py-2 rounded focus:outline-emerald-300'
               />
             </div>
-            <div className='w-full flex gap-3 items-center mb-2'>
-              <label htmlFor='graduation' className='w-2/5'>
+            <div className='w-full flex flex-col md:flex-row gap-3 md:items-center mb-2'>
+              <label htmlFor='graduation' className='md:w-2/5'>
                 Expected Graduation
               </label>
               <input
                 type='number'
                 id='graduation'
                 placeholder='2024'
-                className='w-3/5 border px-4 py-2 rounded focus:outline-emerald-300'
+                className='md:w-3/5 border px-4 py-2 rounded focus:outline-emerald-300'
               />
             </div>
           </div>
         </section>
-        <section className="w-full border p-4 my-3">
+        <section className='w-full border p-4 my-3'>
           <DocumentUpload />
         </section>
       </section>

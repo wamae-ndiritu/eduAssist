@@ -90,7 +90,7 @@ export default function HorizontalLinearStepper() {
             stepProps.completed = false;
           }
           return (
-            <Step key={label} {...stepProps}>
+            <Step key={index} {...stepProps}>
               <StepLabel
                 {...labelProps}
                 StepIconProps={{ classes: { root: "custom-stepper-icon" } }}

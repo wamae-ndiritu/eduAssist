@@ -8,7 +8,11 @@ const About = () => {
       </h2>
       <div className='grid grid-cols-1 md:grid-cols-5 gap-5 my-6 flex items-center'>
         <section className='col-span-1 md:col-span-2'>
-            <img src={eduAssist} alt="EduAssist" className="h-full w-full object-cover rounded-lg" />
+          <img
+            src={eduAssist}
+            alt='EduAssist'
+            className='h-full w-full object-cover rounded-lg'
+          />
           {/* <h1 className='p-4 text-2xl font-bold'>EduAssist Connect Platform</h1>
           <p className='p-3 font-semibold text-xl '>
             Are you looking for education fanancial assist? Then look no
@@ -29,19 +33,19 @@ const About = () => {
             connect with them.
           </p>
           <p className='p-3'>
-            With this Platfom, the students sicking the financial aid, files an
+            With this Platform, the students seeking the financial aid, files an
             application with thier informatiom including thier name, school,
             course and the amount of money they need.On the other side, the
-            aspiring sponser can view the students application and decide to
-            offer the assistance.The platform therefore provide a way by wich
+            aspiring sponsor can view the students application and decide to
+            offer the assistance.The platform therefore provide a way by which
             the student can communicate with assiprant sponsor through text
-            messages which enales the them to atleast get some nessary
-            information about each other that enhances the aiding.
+            messages which enables them to atleast get the necessary information
+            about each other that enhances the aiding.
           </p>
         </section>
       </div>
     </div>
   );
-}
+};
 
 export default About

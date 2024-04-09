@@ -21,11 +21,11 @@ function ApplicationFeatures() {
         <div className="mb-8 bg-gray-100 rounded p-1 h-72 w-60 flex flex-col justify-center items-center">
           <section className="m-4 mb-1 rounded bg-gray-200 h-52 w-48 flex justify-center items-center">
             {feesStructure ? (
-              <img
+              <iframe
                 src={feesStructure}
-                alt="Fees Structure"
-                className="w-full h-full object-cover"
-              />
+                // className="w-full h-full object-cover"
+                className="w-full h-48 rounded-lg mb-2"
+              ></iframe>
             ) : (
               <p className="text-center">Fees Structure</p>
             )}
@@ -49,9 +49,8 @@ function ApplicationFeatures() {
         <div className="mb-8 bg-gray-100 rounded p-1 h-72 w-60 flex flex-col justify-center items-center">
           <section className="m-4 mb-1 rounded bg-gray-200 h-52 w-48 flex justify-center items-center">
             {feesStatement ? (
-              <img
+              <iframe
                 src={feesStatement}
-                alt="Fees Statement"
                 className="w-full h-full object-cover"
               />
             ) : (
@@ -77,11 +76,7 @@ function ApplicationFeatures() {
         <div className="mb-8 bg-gray-100 rounded p-1 h-72 w-60 flex flex-col justify-center items-center">
           <section className="m-4 mb-1 rounded bg-gray-200 h-52 w-48 flex justify-center items-center">
             {results ? (
-              <img
-                src={results}
-                alt="Results"
-                className="w-full h-full object-cover"
-              />
+              <iframe src={results} className="w-full h-full object-cover" />
             ) : (
               <p className="text-center">Results</p>
             )}
@@ -102,12 +97,14 @@ function ApplicationFeatures() {
         </div>
       </div>
       <div className="flex flex-col items-center">
-        <h3 className="text-2xl font-semibold">Additional Iformation</h3>
+        <h3 className="text-1xl flex justify-start font-semibold">
+          Additional Iformation
+        </h3>
         <textarea
           name=""
           id=""
-          cols="90"
-          rows="10"
+          cols="80"
+          rows="5"
           className="border outline-emerald-100 p-4 mt-2 mb-4"
         ></textarea>
         <button className="bg-emerald-400 p-4 w-48 rounded font-semibold hover:text-white">

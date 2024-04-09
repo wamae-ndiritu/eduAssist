@@ -1,16 +1,104 @@
 import EditIcon from "@mui/icons-material/Edit";
 import { useState } from "react";
 import DocumentUpload from "./utils/DocumentUpload";
-import {useSelector} from "react-redux";
+import { useSelector } from "react-redux";
+import DescriptionIcon from "@mui/icons-material/Description";
+import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import CommentIcon from "@mui/icons-material/Comment";
+import { Link } from "react-router-dom";
+
+export const ProfileHead = () => {
+  const {
+    userInfo: { user },
+  } = useSelector((state) => state.user);
+  const [profileImage, setProfileImage] = useState(null);
+
+  const handleImageChange = (e) => {
+    const selectedImage = e.target.files[0];
+    setProfileImage(URL.createObjectURL(selectedImage));
+  };
+  return (
+    <section className='w-full grid grid-cols-1 md:grid-cols-7 gap-3'>
+      <div className='col-span-1 md:col-span-2 border rounded p-4'>
+        <ul>
+          <li className='mb-2'>
+            <Link
+              to='/profile'
+              className='shadow-sm flex gap-3 items-center bg-slate-100 px-4 py-2 rounded text-gray-600 hover:bg-emerald-300 hover:text-white'
+            >
+              <ManageAccountsIcon /> <h6>Account</h6>
+            </Link>
+          </li>
+          <li className='mb-2'>
+            <Link
+              to='/profile/applications/new'
+              className='shadow-sm flex gap-3 items-center bg-slate-100 px-4 py-2 rounded text-gray-600 hover:bg-emerald-300 hover:text-white'
+            >
+              <LibraryAddIcon /> <h6>New Application</h6>
+            </Link>
+          </li>
+          <li className='mb-2'>
+            <Link
+              to='/profile/applications/1'
+              className='shadow-sm flex gap-3 items-center bg-slate-100 px-4 py-2 rounded text-gray-600 hover:bg-emerald-300 hover:text-white'
+            >
+              <DescriptionIcon /> <h6>My Applications</h6>
+            </Link>
+          </li>
+          <li className='mb-2'>
+            <Link
+              to='/profile/messages/1'
+              className='shadow-sm flex gap-3 items-center bg-slate-100 px-4 py-2 rounded text-gray-600 hover:bg-emerald-300 hover:text-white'
+            >
+              <CommentIcon /> <h6>Messages</h6>
+            </Link>
+          </li>
+        </ul>
+      </div>
+      <div className='col-span-1 md:col-span-5 grid grid-cols-1 md:grid-cols-3 gap-3 border p-4 rounded'>
+        <div className='col-span-1 flex items-center justify-center'>
+          <div className='relative w-32 h-32 rounded-full border border-emerald-300'>
+            <img
+              src={profileImage ? profileImage : "/profile-icon.jpeg"}
+              alt='Profile'
+              className='h-full w-full rounded-full object-cover'
+            />
+            <span className='bg-emerald-500 h-8 w-8 rounded-full flex items-center justify-center absolute bottom-0 border border-white text-white edit-image-badge'>
+              <label htmlFor='profile'>
+                <EditIcon />
+              </label>
+              <input
+                type='file'
+                name=''
+                id='profile'
+                className='image-input'
+                onChange={handleImageChange}
+              />
+            </span>
+          </div>
+        </div>
+        <div className='col-span-1 md:col-span-2 flex flex-col justify-center'>
+          <h2 className='flex gap-5 items-center text-2xl font-semibold my-1'>
+            {user?.full_name}
+            <span className='bg-emerald-500 text-white rounded px-4 py-2 text-sm my-auto'>
+              {user?.username}
+            </span>
+          </h2>
+          <h6 className='text-gray-600 text-lg my-0'>{user?.email}</h6>
+          <p className='py-2 text-gray-600'>{user?.contact}</p>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 const Profile = () => {
-  const {userInfo: {user}} = useSelector((state) => state.user);
-    const [profileImage, setProfileImage] = useState(null);
+  const {
+    userInfo: { user },
+  } = useSelector((state) => state.user);
 
-    const handleImageChange = (e) => {
-      const selectedImage = e.target.files[0];
-      setProfileImage(URL.createObjectURL(selectedImage));
-    };
+  console.log(user);
   return (
     <div className='w-full bg-white my-12 flex flex-cols items-center justify-center'>
       <section className='w-full md:w-4/5 px-4 md:px-12 py-4 border flex flex-col items-center'>
@@ -20,39 +108,7 @@ const Profile = () => {
           seeking financial aid. Please update any blank section, for you to
           start creating new applications.
         </p>
-        <div className='w-full md:w-3/5 grid grid-cols-1 md:grid-cols-3 gap-3 border p-4 rounded'>
-          <div className='col-span-1 flex items-center justify-center'>
-            <div className='relative w-32 h-32 rounded-full border border-emerald-300'>
-              <img
-                src={profileImage ? profileImage : "/profile-icon.jpeg"}
-                alt='Profile'
-                className='h-full w-full rounded-full object-cover'
-              />
-              <span className='bg-emerald-500 h-8 w-8 rounded-full flex items-center justify-center absolute bottom-0 border border-white text-white edit-image-badge'>
-                <label htmlFor='profile'>
-                  <EditIcon />
-                </label>
-                <input
-                  type='file'
-                  name=''
-                  id='profile'
-                  className='image-input'
-                  onChange={handleImageChange}
-                />
-              </span>
-            </div>
-          </div>
-          <div className='col-span-1 md:col-span-2 flex flex-col justify-center'>
-            <h2 className='flex gap-5 items-center text-2xl font-semibold my-1'>
-              {user?.full_name}
-              <span className='bg-emerald-500 text-white rounded px-4 py-2 text-sm my-auto'>
-                {user?.username}
-              </span>
-            </h2>
-            <h6 className='text-gray-600 text-lg my-0'>{user?.email}</h6>
-            <p className='py-2 text-gray-600'>{user?.contact}</p>
-          </div>
-        </div>
+        <ProfileHead />
         <section className='w-full grid grid-cols-1 md:grid-cols-4 gap-4 my-3'>
           <div className='col-span-1 md:col-span-2 border rounded p-4'>
             <h6 className='mb-2 font-semibold'>Personal Information</h6>

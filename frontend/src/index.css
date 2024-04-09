@@ -7,6 +7,14 @@
   margin: 0;
 }
 
+.ac-sub-menu{
+  display: none;
+}
+
+.account-link:hover .ac-sub-menu{
+  display: block;
+}
+
 .regBody {
   background-image: url("./assets/background.jpeg");
   background-size: cover;

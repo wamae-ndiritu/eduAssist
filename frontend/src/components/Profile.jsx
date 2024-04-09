@@ -1,9 +1,10 @@
 import EditIcon from "@mui/icons-material/Edit";
 import { useState } from "react";
-import HorizontalLinearStepper from "./utils/Stepper";
 import DocumentUpload from "./utils/DocumentUpload";
+import {useSelector} from "react-redux";
 
 const Profile = () => {
+  const {userInfo: {user}} = useSelector((state) => state.user);
     const [profileImage, setProfileImage] = useState(null);
 
     const handleImageChange = (e) => {
@@ -12,17 +13,14 @@ const Profile = () => {
     };
   return (
     <div className='w-full bg-white my-12 flex flex-cols items-center justify-center'>
-      <section className='md:w-4/5 px-12 py-4 border flex flex-col items-center'>
+      <section className='w-full md:w-4/5 px-4 md:px-12 py-4 border flex flex-col items-center'>
         <h1 className='text-3xl font-semibold my-5'>Update Profile Details</h1>
         <p className='text-gray-600 py-3'>
           Your information is a vital and required step in the processes of
           seeking financial aid. Please update any blank section, for you to
           start creating new applications.
         </p>
-        <div className='my-4'>
-          <HorizontalLinearStepper />
-        </div>
-        <div className='md:w-3/5 grid grid-cols-1 md:grid-cols-3 gap-3 border p-4 rounded'>
+        <div className='w-full md:w-3/5 grid grid-cols-1 md:grid-cols-3 gap-3 border p-4 rounded'>
           <div className='col-span-1 flex items-center justify-center'>
             <div className='relative w-32 h-32 rounded-full border border-emerald-300'>
               <img
@@ -45,14 +43,14 @@ const Profile = () => {
             </div>
           </div>
           <div className='col-span-1 md:col-span-2 flex flex-col justify-center'>
-            <h2 className='text-3xl font-semibold my-auto'>
-              Wamae Ndiritu{" "}
+            <h2 className='flex gap-5 items-center text-2xl font-semibold my-1'>
+              {user?.full_name}
               <span className='bg-emerald-500 text-white rounded px-4 py-2 text-sm my-auto'>
-                Wamae
+                {user?.username}
               </span>
             </h2>
-            <h6 className='text-gray-600 text-lg'>wamaejoseph392@gmail.com</h6>
-            <p className='py-2 text-gray-600'>+254740924507</p>
+            <h6 className='text-gray-600 text-lg my-0'>{user?.email}</h6>
+            <p className='py-2 text-gray-600'>{user?.contact}</p>
           </div>
         </div>
         <section className='w-full grid grid-cols-1 md:grid-cols-4 gap-4 my-3'>

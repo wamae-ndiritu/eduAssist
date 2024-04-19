@@ -40,11 +40,21 @@ const Navbar = () => {
           <li className='relative cursor-pointer account-link'>
             Account
             <ul className='w-max ac-sub-menu bg-emerald-300 rounded border border-emerald-300 pt-4 px-2 absolute top-5 pt-10'>
-              <li className='my-1 px-2 py-1 hover:bg-white hover:rounded'>
-                <NavLink to='/profile'>Profile</NavLink>
+              <li>
+                <NavLink
+                  to='/profile'
+                  className='my-1 px-2 py-1 hover:bg-white hover:rounded'
+                >
+                  Profile
+                </NavLink>
               </li>
-              <li className='my-1 px-2 py-1 hover:bg-white hover:rounded'>
-                My Applications
+              <li>
+                <NavLink
+                  to='/profile/applications/1'
+                  className='my-1 px-2 py-1 hover:bg-white hover:rounded'
+                >
+                  My Applications
+                </NavLink>
               </li>
               <li className='my-1 px-2 py-1 hover:bg-white hover:rounded'>
                 <button onClick={handleLogout}>Logout</button>
@@ -53,14 +63,13 @@ const Navbar = () => {
           </li>
         )}
         <li>
-          <NavLink to='/#how-it-works'>How It works</NavLink>
+          <a href='/#how-it-works'>How It works</a>
         </li>
-        <li>Get Started</li>
         <li>
-          <NavLink to='/#about-us'>About Us</NavLink>
+          <a href='/#about-us'>About Us</a>
         </li>
         {!userInfo && (
-          <li className="flex gap-3">
+          <li className='flex gap-3'>
             <li>
               <NavLink to='/register'>
                 <button className='bg-white py-1 px-4 rounded text-emerald-500'>

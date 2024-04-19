@@ -84,7 +84,7 @@ const LoginPage = () => {
             </label>
             <input
               type="email"
-              placeholder="Wamai"
+              placeholder="johndoe@example.com"
               className="border py-2 px-2 focus:outline-emerald-300"
               id="email"
               name="email"

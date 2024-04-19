@@ -2,7 +2,7 @@ import eduAssist from "../assets/background.jpeg"
 
 const About = () => {
   return (
-    <div className='w-full p-4 md:p-10 bg-emerald-300'>
+    <div className='w-full p-4 md:p-10 bg-emerald-300' id='about-us'>
       <h2 className='text-3xl font-semibold text-center text-gray-900 mt-6'>
         About Us
       </h2>

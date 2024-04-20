@@ -69,7 +69,6 @@ class Beneficiary(models.Model):
     institution_details_updated = models.BooleanField(default=False)
 
     # Document URLs
-    birth_certificate_url = models.URLField(blank=True, null=True)
     national_id_url = models.URLField(blank=True, null=True)
     kcpe_certificate_url = models.URLField(blank=True, null=True)
     kcse_certificate_url = models.URLField(blank=True, null=True)

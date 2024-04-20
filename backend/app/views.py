@@ -113,28 +113,67 @@ def update_personal_info(request, profile_id):
                 # Profile info has not been previously updated
                 if location is None or city is None or address is None or zip_code is None or date_of_birth is None:
                     return Response({"message": "Please fill all the personal infomartion!"}, status=status.HTTP_404_BAD_REQUEST)
-                profile.location = location
-                profile.city = city
-                profile.address = address
-                profile.zip_code = zip_code
-                profile.date_of_birth = date_of_birth
-                profile.personal_info_updated = True
-            else:
-                profile.location = location or profile.location
-                profile.city = city or profile.city
-                profile.address = address or profile.address
-                profile.zip_code = zip_code or profile.zip_code
-                profile.date_of_birth = date_of_birth or profile.date_of_birth
+            profile.location = location or profile.location
+            profile.city = city or profile.city
+            profile.address = address or profile.address
+            profile.zip_code = zip_code or profile.zip_code
+            profile.date_of_birth = date_of_birth or profile.date_of_birth
+            profile.personal_info_updated = True
             profile.save()
+            return Response(status=status.HTTP_200_OK)
         except Beneficiary.DoesNotExist:
             return Response({"message": "Profile not found!"}, status=status.HTTP_404_NOT_FOUND)
+    return Response({"message": "Invalid request method!"}, status=status.HTTP_403_BAD_REQUEST)
         
 
-# institution_name = models.CharField(max_length=200)
-# education_level = models.CharField(max_length=100)
-# course_name = models.CharField(max_length=200)
-# year_joined = models.PositiveIntegerField(blank=True, null=True)
-# expected_graduation = models.DateField(blank=True, null=True)
-# institution_details_updated = models.BooleanField(default=False)
 # 2. Update institution details
-# @permission_classes([IsAuthenticated])
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def update_institution_info(request, profile_id):
+    if request.method == 'PATCH':
+        name = request.data.get('institution_name', None)
+        level = request.data.get('education_level', None)
+        course = request.data.get('course_name', None)
+        year_joined = request.data.get('year_joined', None)
+        expected_graduation = request.data.get('expected_graduation', None)
+        try:
+            profile = Beneficiary.objects.get(user__id=profile_id)
+            if not profile.institution_details_updated:
+                # Insitution details has not been previously updated
+                if name is None or level is None or course is None or year_joined is None or expected_graduation is None:
+                    return Response({"message": "Please fill all the institution details!"}, status=status.HTTP_404_BAD_REQUEST)
+            profile.institution_name = name or profile.institution_name
+            profile.education_level = level or profile.education_level
+            profile.course_name = course or profile.course_name
+            profile.year_joined = year_joined or profile.year_joined
+            profile.expected_graduation = expected_graduation or profile.expected_graduation
+            profile.institution_details_updated = True
+            profile.save()
+            return Response(status=status.HTTP_200_OK)
+        except Beneficiary.DoesNotExist:
+            return Response({"message": "Profile not found!"}, status=status.HTTP_404_NOT_FOUND)
+    return Response({"message": "Invalid request method!"}, status=status.HTTP_403_BAD_REQUEST)
+
+# 3. Update documents
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def update_institution_info(request, profile_id):
+    if request.method == 'PATCH':
+        n_id = request.data.get('national_id', None)
+        kcpe = request.data.get('KCPE_certificate', None)
+        kcse = request.data.get('KCSE_certificate', None)
+        try:
+            profile = Beneficiary.objects.get(user__id=profile_id)
+            if not profile.institution_details_updated:
+                # Documents has not been previously updated
+                if n_id is None or kcpe is None or kcse is None:
+                    return Response({"message": "Please upload all documents!"}, status=status.HTTP_404_BAD_REQUEST)
+            profile.national_id_url = n_id or profile.national_id_url
+            profile.kcpe_certificate_url = kcpe or profile.kcpe_certificate_url
+            profile.kcse_certificate_url = kcse or profile.kcse_certificate_url
+            profile.documents_updated = True
+            profile.save()
+            return Response(status=status.HTTP_200_OK)
+        except Beneficiary.DoesNotExist:
+            return Response({"message": "Profile not found!"}, status=status.HTTP_404_NOT_FOUND)
+    return Response({"message": "Invalid request method!"}, status=status.HTTP_403_BAD_REQUEST)

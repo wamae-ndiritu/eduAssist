@@ -58,6 +58,7 @@ class Beneficiary(models.Model):
     address = models.CharField(max_length=100, blank=True, null=True)
     zip_code = models.CharField(max_length=10, blank=True, null=True)
     date_of_birth = models.DateField(blank=True, null=True)
+    personal_info_updated = models.BooleanField(default=False)
 
     # Institution Information
     institution_name = models.CharField(max_length=200)
@@ -65,12 +66,14 @@ class Beneficiary(models.Model):
     course_name = models.CharField(max_length=200)
     year_joined = models.PositiveIntegerField(blank=True, null=True)
     expected_graduation = models.DateField(blank=True, null=True)
+    institution_details_updated = models.BooleanField(default=False)
 
     # Document URLs
     birth_certificate_url = models.URLField(blank=True, null=True)
     national_id_url = models.URLField(blank=True, null=True)
     kcpe_certificate_url = models.URLField(blank=True, null=True)
     kcse_certificate_url = models.URLField(blank=True, null=True)
+    documents_updated = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.institution_name} - {self.course_name} - {self.year_joined}"

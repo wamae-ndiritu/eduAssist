@@ -1,9 +1,10 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import CustomUser, Beneficiary
 from .serializers import BeneficiarySerializer, CustomUserSerializer, BeneficiaryReadSerializer
+from rest_framework.permissions import IsAuthenticated
 
 
 @api_view(['POST'])
@@ -45,7 +46,6 @@ def create_user(request):
 # Login
 @api_view(['POST'])
 def login(request):
-    print(request.data)
     data = request.data
     password = data.get('password', None)
     email = data.get('email', None)
@@ -94,3 +94,47 @@ def delete_user(request, user_id):
             return Response(status=status.HTTP_204_NO_CONTENT)
         except CustomUser.DoesNotExist:
             return Response({"message": "User not found!"}, status=status.HTTP_404_NOT_FOUND)
+
+# Update beneficiary profile
+# 1. Update personal info
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def update_personal_info(request, profile_id):
+    if request.method == "PATCH":
+    # personal_info_updated = models.BooleanField(default=False)
+        location = request.data.get('location', None)
+        city = request.data.get('city', None)
+        address = request.data.get('address', None)
+        zip_code = request.data.get('zip_code', None)
+        date_of_birth = request.data.get('date_of_birth', None)
+        try:
+            profile = Beneficiary.objects.get(user__id=profile_id)
+            if not profile.personal_info_updated:
+                # Profile info has not been previously updated
+                if location is None or city is None or address is None or zip_code is None or date_of_birth is None:
+                    return Response({"message": "Please fill all the personal infomartion!"}, status=status.HTTP_404_BAD_REQUEST)
+                profile.location = location
+                profile.city = city
+                profile.address = address
+                profile.zip_code = zip_code
+                profile.date_of_birth = date_of_birth
+                profile.personal_info_updated = True
+            else:
+                profile.location = location or profile.location
+                profile.city = city or profile.city
+                profile.address = address or profile.address
+                profile.zip_code = zip_code or profile.zip_code
+                profile.date_of_birth = date_of_birth or profile.date_of_birth
+            profile.save()
+        except Beneficiary.DoesNotExist:
+            return Response({"message": "Profile not found!"}, status=status.HTTP_404_NOT_FOUND)
+        
+
+# institution_name = models.CharField(max_length=200)
+# education_level = models.CharField(max_length=100)
+# course_name = models.CharField(max_length=200)
+# year_joined = models.PositiveIntegerField(blank=True, null=True)
+# expected_graduation = models.DateField(blank=True, null=True)
+# institution_details_updated = models.BooleanField(default=False)
+# 2. Update institution details
+# @permission_classes([IsAuthenticated])

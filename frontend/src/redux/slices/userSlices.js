@@ -8,6 +8,8 @@ const initialState = {
   loading: false,
   error: null,
   userInfo: userInfoFromLocalStorage,
+  profileInfo: {},
+  profileUpdated: false,
 };
 
 export const userSlice = createSlice({
@@ -31,7 +33,25 @@ export const userSlice = createSlice({
     },
     resetUserErr: (state) => {
       state.error = null;
+      state.profileUpdated = false;
     },
+    usersActionStart: (state) => {
+      state.loading = true;
+      state.error = null;
+      state.profileUpdated = false;
+    },
+    usersActionFail: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+    updateProfileSuccess: (state) => {
+      state.loading = false;
+      state.profileUpdated = true;
+    },
+    getProfileInfoSuccess: (state, action) => {
+      state.loading = false;
+      state.profileInfo = action.payload;
+    }
   },
 });
 
@@ -40,7 +60,11 @@ export const {
   userLoginSuccess,
   userLoginFail,
   clearUserState,
-  resetUserErr
+  resetUserErr,
+  usersActionStart,
+  usersActionFail,
+  updateProfileSuccess,
+  getProfileInfoSuccess
 } = userSlice.actions;
 
 export default userSlice.reducer;

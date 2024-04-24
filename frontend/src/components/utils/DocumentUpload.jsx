@@ -2,7 +2,6 @@ import { useState } from "react";
 
 function DocumentUpload() {
   const [documents, setDocuments] = useState(Array(4).fill(null));
-  console.log(documents)
 
 const handleDocumentChange = (e, index) => {
   const selectedDocument = e.target.files[0];

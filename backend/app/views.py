@@ -109,10 +109,11 @@ def update_personal_info(request, profile_id):
         date_of_birth = request.data.get('date_of_birth', None)
         try:
             profile = Beneficiary.objects.get(user__id=profile_id)
+            print(profile)
             if not profile.personal_info_updated:
                 # Profile info has not been previously updated
                 if location is None or city is None or address is None or zip_code is None or date_of_birth is None:
-                    return Response({"message": "Please fill all the personal infomartion!"}, status=status.HTTP_404_BAD_REQUEST)
+                    return Response({"message": "Please fill all the personal infomartion!"}, status=status.HTTP_400_BAD_REQUEST)
             profile.location = location or profile.location
             profile.city = city or profile.city
             profile.address = address or profile.address
@@ -123,7 +124,7 @@ def update_personal_info(request, profile_id):
             return Response(status=status.HTTP_200_OK)
         except Beneficiary.DoesNotExist:
             return Response({"message": "Profile not found!"}, status=status.HTTP_404_NOT_FOUND)
-    return Response({"message": "Invalid request method!"}, status=status.HTTP_403_BAD_REQUEST)
+    return Response({"message": "Invalid request method!"}, status=status.HTTP_400_BAD_REQUEST)
         
 
 # 2. Update institution details
@@ -141,7 +142,7 @@ def update_institution_info(request, profile_id):
             if not profile.institution_details_updated:
                 # Insitution details has not been previously updated
                 if name is None or level is None or course is None or year_joined is None or expected_graduation is None:
-                    return Response({"message": "Please fill all the institution details!"}, status=status.HTTP_404_BAD_REQUEST)
+                    return Response({"message": "Please fill all the institution details!"}, status=status.HTTP_400_BAD_REQUEST)
             profile.institution_name = name or profile.institution_name
             profile.education_level = level or profile.education_level
             profile.course_name = course or profile.course_name
@@ -152,7 +153,7 @@ def update_institution_info(request, profile_id):
             return Response(status=status.HTTP_200_OK)
         except Beneficiary.DoesNotExist:
             return Response({"message": "Profile not found!"}, status=status.HTTP_404_NOT_FOUND)
-    return Response({"message": "Invalid request method!"}, status=status.HTTP_403_BAD_REQUEST)
+    return Response({"message": "Invalid request method!"}, status=status.HTTP_400_BAD_REQUEST)
 
 # 3. Update documents
 @api_view(['PATCH'])
@@ -167,7 +168,7 @@ def update_documents(request, profile_id):
             if not profile.institution_details_updated:
                 # Documents has not been previously updated
                 if n_id is None or kcpe is None or kcse is None:
-                    return Response({"message": "Please upload all documents!"}, status=status.HTTP_404_BAD_REQUEST)
+                    return Response({"message": "Please upload all documents!"}, status=status.HTTP_400_BAD_REQUEST)
             profile.national_id_url = n_id or profile.national_id_url
             profile.kcpe_certificate_url = kcpe or profile.kcpe_certificate_url
             profile.kcse_certificate_url = kcse or profile.kcse_certificate_url
@@ -176,7 +177,7 @@ def update_documents(request, profile_id):
             return Response(status=status.HTTP_200_OK)
         except Beneficiary.DoesNotExist:
             return Response({"message": "Profile not found!"}, status=status.HTTP_404_NOT_FOUND)
-    return Response({"message": "Invalid request method!"}, status=status.HTTP_403_BAD_REQUEST)
+    return Response({"message": "Invalid request method!"}, status=status.HTTP_400_BAD_REQUEST)
 
 # Get profile info
 @api_view(['GET'])
@@ -185,8 +186,8 @@ def get_profile_info(request, profile_id):
     if request.method == 'GET':
         try:
             user = CustomUser.objects.get(id=profile_id)
-            user_serializer = CustomUserSerializer(user_serializer)
-            beneficiary = Beneficiary.objects.get(id=user.id)
+            user_serializer = CustomUserSerializer(user)
+            beneficiary = Beneficiary.objects.get(user_id=user.id)
             beneficiary_serializer = BeneficiaryReadSerializer(beneficiary)
             user_info = {
                 **user_serializer.data,
@@ -195,4 +196,4 @@ def get_profile_info(request, profile_id):
             return Response(user_info, status=status.HTTP_200_OK)
         except CustomUser.DoesNotExist:
             return Response({"message": "User not found!"}, status=status.HTTP_404_NOT_FOUND)
-    return Response({"message": "Invalid request method!"}, status=status.HTTP_403_BAD_REQUEST)
+    return Response({"message": "Invalid request method!"}, status=status.HTTP_400_BAD_REQUEST)

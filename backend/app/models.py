@@ -39,11 +39,20 @@ class CustomUser(AbstractBaseUser):
     user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+    is_superuser = models.BooleanField(default=True)
 
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['user_type']
+
+    def has_perm(self, perm, obj=None):
+        # Handle custom permissions logic here
+        return True
+
+    def has_module_perms(self, app_label):
+        # Handle custom module permissions logic here
+        return True
 
     def __str__(self):
         return self.username

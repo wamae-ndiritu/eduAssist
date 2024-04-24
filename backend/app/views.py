@@ -157,7 +157,7 @@ def update_institution_info(request, profile_id):
 # 3. Update documents
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
-def update_institution_info(request, profile_id):
+def update_documents(request, profile_id):
     if request.method == 'PATCH':
         n_id = request.data.get('national_id', None)
         kcpe = request.data.get('KCPE_certificate', None)
@@ -176,4 +176,23 @@ def update_institution_info(request, profile_id):
             return Response(status=status.HTTP_200_OK)
         except Beneficiary.DoesNotExist:
             return Response({"message": "Profile not found!"}, status=status.HTTP_404_NOT_FOUND)
+    return Response({"message": "Invalid request method!"}, status=status.HTTP_403_BAD_REQUEST)
+
+# Get profile info
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_profile_info(request, profile_id):
+    if request.method == 'GET':
+        try:
+            user = CustomUser.objects.get(id=profile_id)
+            user_serializer = CustomUserSerializer(user_serializer)
+            beneficiary = Beneficiary.objects.get(id=user.id)
+            beneficiary_serializer = BeneficiaryReadSerializer(beneficiary)
+            user_info = {
+                **user_serializer.data,
+                **beneficiary_serializer.data
+            }
+            return Response(user_info, status=status.HTTP_200_OK)
+        except CustomUser.DoesNotExist:
+            return Response({"message": "User not found!"}, status=status.HTTP_404_NOT_FOUND)
     return Response({"message": "Invalid request method!"}, status=status.HTTP_403_BAD_REQUEST)

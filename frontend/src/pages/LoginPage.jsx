@@ -18,8 +18,7 @@ const LoginPage = () => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
   };
 
-  const togglePass = (e) => {
-    e.preventDefault();
+  const togglePass = () => {
     setShowPass(!showPass);
   };
 
@@ -106,13 +105,13 @@ const LoginPage = () => {
               onChange={handleChange}
             />
           </div>
-          <button
+          <div
             className="flex gap-3 my-3 text-gray-600"
             onClick={togglePass}
           >
             <RemoveRedEyeIcon />
             <p>Show password</p>
-          </button>
+          </div>
           <button
             type="submit"
             className="bg-emerald-300 py-1 px-4 text-white rounded text-lg font-semibold w-full"

@@ -76,9 +76,7 @@ export const getProfileInfo = () => async (dispatch, getState) => {
       config
     );
     dispatch(getProfileInfoSuccess(data));
-    console.log(`Profile Data: ${data}`)
   } catch (err) {
-    console.log(err);
     const errMsg =
       err?.data && err?.data?.length
         ? err.data[0]?.message
@@ -114,28 +112,32 @@ export const updateProfile =
         },
       };
 
+      let profileUpdate = {}
+
       if (type === "personal") {
-        await axios.patch(
+        const {data} = await axios.patch(
           `${BASE_URL}/users/${userInfo?.user?.user}/update/personal-info/`,
           profileData,
           config
         );
+        profileUpdate = data;
       } else if (type === "institution") {
-        await axios.patch(
+        const {data} = await axios.patch(
           `${BASE_URL}/users/${userInfo?.user?.user}/update/institution-info/`,
           profileData,
           config
         );
+        profileUpdate = data
       } else if (type === "documents") {
-        await axios.get(
+        const {data} = await axios.patch(
           `${BASE_URL}/users/${userInfo?.user?.user}/update/documents/`,
           profileData,
           config
         );
+        profileUpdate = data;
       }
-      dispatch(updateProfileSuccess());
+      dispatch(updateProfileSuccess(profileUpdate));
     } catch (err) {
-      console.log(err);
       const errMsg =
         err?.data && err?.data?.length
           ? err.data[0]?.message

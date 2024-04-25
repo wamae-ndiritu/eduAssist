@@ -10,6 +10,11 @@ const initialState = {
   userInfo: userInfoFromLocalStorage,
   profileInfo: {},
   profileUpdated: false,
+  profileUpdates: {
+    personal: false,
+    institution: false,
+    documents: false,
+  }
 };
 
 export const userSlice = createSlice({
@@ -33,7 +38,9 @@ export const userSlice = createSlice({
     },
     resetUserErr: (state) => {
       state.error = null;
-      state.profileUpdated = false;
+      state.profileUpdates.personal = false;
+      state.profileUpdates.institution = false;
+      state.profileUpdates.documents = false;
     },
     usersActionStart: (state) => {
       state.loading = true;
@@ -44,9 +51,9 @@ export const userSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
-    updateProfileSuccess: (state) => {
+    updateProfileSuccess: (state, action) => {
       state.loading = false;
-      state.profileUpdated = true;
+      state.profileUpdates = {...state.profileUpdates, ...action.payload};
     },
     getProfileInfoSuccess: (state, action) => {
       state.loading = false;

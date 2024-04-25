@@ -74,7 +74,7 @@ class Beneficiary(models.Model):
     education_level = models.CharField(max_length=100)
     course_name = models.CharField(max_length=200)
     year_joined = models.PositiveIntegerField(blank=True, null=True)
-    expected_graduation = models.DateField(blank=True, null=True)
+    expected_graduation = models.PositiveIntegerField(blank=True, null=True)
     institution_details_updated = models.BooleanField(default=False)
 
     # Document URLs

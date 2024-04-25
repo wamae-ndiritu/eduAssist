@@ -121,7 +121,7 @@ def update_personal_info(request, profile_id):
             profile.date_of_birth = date_of_birth or profile.date_of_birth
             profile.personal_info_updated = True
             profile.save()
-            return Response(status=status.HTTP_200_OK)
+            return Response({"personal": True}, status=status.HTTP_200_OK)
         except Beneficiary.DoesNotExist:
             return Response({"message": "Profile not found!"}, status=status.HTTP_404_NOT_FOUND)
     return Response({"message": "Invalid request method!"}, status=status.HTTP_400_BAD_REQUEST)
@@ -132,9 +132,9 @@ def update_personal_info(request, profile_id):
 @permission_classes([IsAuthenticated])
 def update_institution_info(request, profile_id):
     if request.method == 'PATCH':
-        name = request.data.get('institution_name', None)
-        level = request.data.get('education_level', None)
-        course = request.data.get('course_name', None)
+        name = request.data.get('name', None)
+        level = request.data.get('level', None)
+        course = request.data.get('course', None)
         year_joined = request.data.get('year_joined', None)
         expected_graduation = request.data.get('expected_graduation', None)
         try:
@@ -150,7 +150,7 @@ def update_institution_info(request, profile_id):
             profile.expected_graduation = expected_graduation or profile.expected_graduation
             profile.institution_details_updated = True
             profile.save()
-            return Response(status=status.HTTP_200_OK)
+            return Response({"institution": True}, status=status.HTTP_200_OK)
         except Beneficiary.DoesNotExist:
             return Response({"message": "Profile not found!"}, status=status.HTTP_404_NOT_FOUND)
     return Response({"message": "Invalid request method!"}, status=status.HTTP_400_BAD_REQUEST)
@@ -174,7 +174,7 @@ def update_documents(request, profile_id):
             profile.kcse_certificate_url = kcse or profile.kcse_certificate_url
             profile.documents_updated = True
             profile.save()
-            return Response(status=status.HTTP_200_OK)
+            return Response({"documents": True}, status=status.HTTP_200_OK)
         except Beneficiary.DoesNotExist:
             return Response({"message": "Profile not found!"}, status=status.HTTP_404_NOT_FOUND)
     return Response({"message": "Invalid request method!"}, status=status.HTTP_400_BAD_REQUEST)

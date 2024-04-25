@@ -23,74 +23,74 @@ export const ProfileHead = () => {
     setProfileImage(URL.createObjectURL(selectedImage));
   };
   return (
-    <section className="w-full grid grid-cols-1 md:grid-cols-7 gap-3">
-      <div className="col-span-1 md:col-span-2 border rounded p-4">
+    <section className='w-full grid grid-cols-1 md:grid-cols-7 gap-3'>
+      <div className='col-span-1 md:col-span-2 border rounded p-4'>
         <ul>
-          <li className="mb-2">
+          <li className='mb-2'>
             <Link
-              to="/profile"
-              className="shadow-sm flex gap-3 items-center bg-slate-100 px-4 py-2 rounded text-gray-600 hover:bg-emerald-300 hover:text-white"
+              to='/profile'
+              className='shadow-sm flex gap-3 items-center bg-slate-100 px-4 py-2 rounded text-gray-600 hover:bg-emerald-300 hover:text-white'
             >
               <ManageAccountsIcon /> <h6>Account</h6>
             </Link>
           </li>
-          <li className="mb-2">
+          <li className='mb-2'>
             <Link
-              to="/profile/applications/new"
-              className="shadow-sm flex gap-3 items-center bg-slate-100 px-4 py-2 rounded text-gray-600 hover:bg-emerald-300 hover:text-white"
+              to='/profile/applications/new'
+              className='shadow-sm flex gap-3 items-center bg-slate-100 px-4 py-2 rounded text-gray-600 hover:bg-emerald-300 hover:text-white'
             >
               <LibraryAddIcon /> <h6>New Application</h6>
             </Link>
           </li>
-          <li className="mb-2">
+          <li className='mb-2'>
             <Link
-              to="/profile/applications/1"
-              className="shadow-sm flex gap-3 items-center bg-slate-100 px-4 py-2 rounded text-gray-600 hover:bg-emerald-300 hover:text-white"
+              to='/profile/applications/1'
+              className='shadow-sm flex gap-3 items-center bg-slate-100 px-4 py-2 rounded text-gray-600 hover:bg-emerald-300 hover:text-white'
             >
               <DescriptionIcon /> <h6>My Applications</h6>
             </Link>
           </li>
-          <li className="mb-2">
+          <li className='mb-2'>
             <Link
-              to="/profile/messages/1"
-              className="shadow-sm flex gap-3 items-center bg-slate-100 px-4 py-2 rounded text-gray-600 hover:bg-emerald-300 hover:text-white"
+              to='/profile/messages/1'
+              className='shadow-sm flex gap-3 items-center bg-slate-100 px-4 py-2 rounded text-gray-600 hover:bg-emerald-300 hover:text-white'
             >
               <CommentIcon /> <h6>Messages</h6>
             </Link>
           </li>
         </ul>
       </div>
-      <div className="col-span-1 md:col-span-5 grid grid-cols-1 md:grid-cols-3 gap-3 border p-4 rounded">
-        <div className="col-span-1 flex items-center justify-center">
-          <div className="relative w-32 h-32 rounded-full border border-emerald-300">
+      <div className='col-span-1 md:col-span-5 grid grid-cols-1 md:grid-cols-3 gap-3 border p-4 rounded'>
+        <div className='col-span-1 flex items-center justify-center'>
+          <div className='relative w-32 h-32 rounded-full border border-emerald-300'>
             <img
               src={profileImage ? profileImage : "/profile-icon.jpeg"}
-              alt="Profile"
-              className="h-full w-full rounded-full object-cover"
+              alt='Profile'
+              className='h-full w-full rounded-full object-cover'
             />
-            <span className="bg-emerald-500 h-8 w-8 rounded-full flex items-center justify-center absolute bottom-0 border border-white text-white edit-image-badge">
-              <label htmlFor="profile">
+            <span className='bg-emerald-500 h-8 w-8 rounded-full flex items-center justify-center absolute bottom-0 border border-white text-white edit-image-badge'>
+              <label htmlFor='profile'>
                 <EditIcon />
               </label>
               <input
-                type="file"
-                name=""
-                id="profile"
-                className="image-input"
+                type='file'
+                name=''
+                id='profile'
+                className='image-input'
                 onChange={handleImageChange}
               />
             </span>
           </div>
         </div>
-        <div className="col-span-1 md:col-span-2 flex flex-col justify-center">
-          <h2 className="flex gap-5 items-center text-2xl font-semibold my-1">
+        <div className='col-span-1 md:col-span-2 flex flex-col justify-center'>
+          <h2 className='flex gap-5 items-center text-2xl font-semibold my-1'>
             {user?.full_name}
-            <span className="bg-emerald-500 text-white rounded px-4 py-2 text-sm my-auto">
+            <span className='bg-emerald-500 text-white rounded px-4 py-2 text-sm my-auto'>
               {user?.username}
             </span>
           </h2>
-          <h6 className="text-gray-600 text-lg my-0">{user?.email}</h6>
-          <p className="py-2 text-gray-600">{user?.contact}</p>
+          <h6 className='text-gray-600 text-lg my-0'>{user?.email}</h6>
+          <p className='py-2 text-gray-600'>{user?.contact}</p>
         </div>
       </div>
     </section>
@@ -100,73 +100,98 @@ export const ProfileHead = () => {
 const Profile = () => {
   const dispatch = useDispatch();
 
-  const {
-    profileInfo,
-    profileUpdated,
-    loading,
-    error
-  } = useSelector((state) => state.user);
+  const { profileInfo, profileUpdates, loading, error } = useSelector(
+    (state) => state.user
+  );
 
   const [personalInfo, setPersonalInfo] = useState({
     location: "",
     city: "",
     address: "",
     zip_code: "",
-    date_of_birth: ""
+    date_of_birth: "",
+  });
+  const [institutionInfo, setInstitutionInfo] = useState({
+    name: "",
+    course: "",
+    level: "",
+    year_joined: "",
+    expected_graduation: "",
   });
   const [personalInfoFormErr, setPersonalInfoFormErr] = useState(null);
-  const [personalInfoUpdateSuccess, setPersonalInfoUpdateSuccess] = useState(null);
+  const [personalInfoUpdateSuccess, setPersonalInfoUpdateSuccess] =
+    useState(null);
+  const [institutionInfoFormErr, setInstitutionFormErr] = useState(null);
+  const [institutionInfoUpdateSuccess, setInstitutionInfoUpdateSuccess] =
+    useState(null);
 
   const handlePersonalInfoChange = (e) => {
-    setPersonalInfo({...personalInfo, [e.target.name]: e.target.value})
-  }
+    setPersonalInfo({ ...personalInfo, [e.target.name]: e.target.value });
+  };
+
+  const handleInstitutionInfoChange = (e) => {
+    setInstitutionInfo({ ...institutionInfo, [e.target.name]: e.target.value });
+  };
 
   const handlePersonalInfoSave = () => {
     const emptyKey = validateObject(personalInfo);
-    console.log(personalInfo)
-    console.log(emptyKey)
-    if (emptyKey){
+    if (emptyKey) {
       setPersonalInfoFormErr(`${emptyKey} is required!`);
       return;
     }
-    dispatch(updateProfile("personal", personalInfo))
-  }
+    dispatch(updateProfile("personal", personalInfo));
+  };
 
   const handleInstitutionInfoSave = () => {
-    console.log("Saving institution details...")
-  }
+    const emptyKey = validateObject(institutionInfo);
+    if (emptyKey) {
+      setInstitutionFormErr(`${emptyKey} is required!`);
+      return;
+    }
+    dispatch(updateProfile("institution", institutionInfo));
+  };
 
   useEffect(() => {
     dispatch(getProfileInfo());
-  }, [dispatch, profileUpdated])
-
-  console.log(profileInfo)
+  }, [dispatch, profileUpdates]);
 
   useEffect(() => {
-    if (error){
+    if (error) {
       const timeout = setTimeout(() => {
         dispatch(resetUserErr());
-      }, 3000);
+      }, 5000);
 
       return () => clearTimeout(timeout);
     }
   }, [dispatch, error]);
 
   useEffect(() => {
-    if (profileInfo){
+    if (profileInfo.personal_info_updated) {
       const newObj = {
         location: profileInfo.location || "",
         city: profileInfo.city || "",
         address: profileInfo.address || "",
         zip_code: profileInfo.zip_code || "",
-        date_of_birth: profileInfo.date_of_birth || ""
-      }
+        date_of_birth: profileInfo.date_of_birth || "",
+      };
       setPersonalInfo(newObj);
+    } 
+    if (profileInfo.institution_details_updated) {
+      const newObj = {
+        name: profileInfo.institution_name || "",
+        course: profileInfo.course_name || "",
+        level: profileInfo.education_level || "",
+        year_joined: profileInfo.year_joined || "",
+        expected_graduation: profileInfo.expected_graduation || "",
+      };
+      setInstitutionInfo(newObj);
     }
-    if (profileUpdated){
-      setPersonalInfoUpdateSuccess("Personal Information updated!")
+    if (profileUpdates.personal) {
+      setPersonalInfoUpdateSuccess("Personal Information updated!");
+    } else if (profileUpdates.institution) {
+      setInstitutionInfoUpdateSuccess("Institution Information updated!");
     }
-  }, [profileInfo, profileUpdated])
+  }, [profileInfo, profileUpdates]);
 
   return (
     <div className='w-full bg-white my-12 flex flex-cols items-center justify-center'>
@@ -178,6 +203,10 @@ const Profile = () => {
           start creating new applications.
         </p>
         <ProfileHead />
+        {loading && <p className='text-sm text-gray-600 py-1'>Saving...</p>}
+        {error && (
+          <Message onClose={() => dispatch(resetUserErr())}>{error}</Message>
+        )}
         <section className='w-full grid grid-cols-1 md:grid-cols-4 gap-4 my-3'>
           <div className='col-span-1 md:col-span-2 border rounded p-4'>
             {personalInfoFormErr && (
@@ -186,14 +215,11 @@ const Profile = () => {
               </Message>
             )}
             {personalInfoUpdateSuccess && (
-              <Message variant="success" onClose={() => setPersonalInfoUpdateSuccess(null)}>
+              <Message
+                variant='success'
+                onClose={() => setPersonalInfoUpdateSuccess(null)}
+              >
                 {personalInfoUpdateSuccess}
-              </Message>
-            )}
-            {loading && <p className='text-sm text-gray-600 py-1'>Saving...</p>}
-            {error && (
-              <Message onClose={() => dispatch(resetUserErr())}>
-                {error}
               </Message>
             )}
             <div className='w-full flex justify-between items-center my-2'>
@@ -277,6 +303,19 @@ const Profile = () => {
             </div>
           </div>
           <div className='col-span-1 md:col-span-2 border rounded p-4'>
+            {institutionInfoFormErr && (
+              <Message onClose={() => setInstitutionFormErr(null)}>
+                {institutionInfoFormErr}
+              </Message>
+            )}
+            {institutionInfoUpdateSuccess && (
+              <Message
+                variant='success'
+                onClose={() => setInstitutionInfoUpdateSuccess(null)}
+              >
+                {institutionInfoUpdateSuccess}
+              </Message>
+            )}
             <div className='w-full flex justify-between items-center my-2'>
               <h6 className='mb-2 font-semibold'>
                 Institution Information{" "}
@@ -300,6 +339,9 @@ const Profile = () => {
                 id='institution'
                 placeholder='University of Nairobi'
                 className='md:w-3/5 border px-4 py-2 rounded focus:outline-emerald-300'
+                value={institutionInfo.name}
+                name='name'
+                onChange={handleInstitutionInfoChange}
               />
             </div>
             <div className='w-full flex flex-col md:flex-row gap-3 md:items-center mb-2'>
@@ -309,11 +351,15 @@ const Profile = () => {
               <select
                 className='md:w-3/5 border px-4 py-2 rounded focus:outline-emerald-300'
                 id='level'
+                value={institutionInfo.level}
+                name='level'
+                onChange={handleInstitutionInfoChange}
               >
-                <option>Certificate</option>
-                <option>Diploma</option>
-                <option>Undergraduate</option>
-                <option>Postgraduate</option>
+                <option>--Select Level--</option>
+                <option value='certificate'>Certificate</option>
+                <option value='diploma'>Diploma</option>
+                <option value='undergraduate'>Undergraduate</option>
+                <option value='postgraduate'>Postgraduate</option>
               </select>
             </div>
             <div className='md:w-full flex flex-col md:flex-row gap-3 md:items-center mb-2'>
@@ -325,6 +371,9 @@ const Profile = () => {
                 id='course_name'
                 placeholder='Bachelor of Education ICT'
                 className='md:w-3/5 border px-4 py-2 rounded focus:outline-emerald-300'
+                value={institutionInfo.course}
+                name='course'
+                onChange={handleInstitutionInfoChange}
               />
             </div>
             <div className='w-full flex flex-col md:flex-row gap-3 md:items-center mb-2'>
@@ -336,6 +385,9 @@ const Profile = () => {
                 id='year_joined'
                 placeholder='2020'
                 className='md:w-3/5 border px-4 py-2 rounded focus:outline-emerald-300'
+                value={institutionInfo.year_joined}
+                name='year_joined'
+                onChange={handleInstitutionInfoChange}
               />
             </div>
             <div className='w-full flex flex-col md:flex-row gap-3 md:items-center mb-2'>
@@ -347,6 +399,9 @@ const Profile = () => {
                 id='graduation'
                 placeholder='2024'
                 className='md:w-3/5 border px-4 py-2 rounded focus:outline-emerald-300'
+                value={institutionInfo.expected_graduation}
+                name='expected_graduation'
+                onChange={handleInstitutionInfoChange}
               />
             </div>
           </div>

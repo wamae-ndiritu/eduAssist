@@ -8,9 +8,10 @@ import {
 import app from "../../firebase";
 import Message from "./Message";
 import { validateObject } from "../../helpers";
-// import pdfjs from "pdfjs-dist";
-import { Document, Page, pdfjs } from "@react-pdf/renderer";
+import * as pdfjs from "pdfjs-dist/build/pdf";
 
+pdfjs.GlobalWorkerOptions.workerSrc =
+  "/node_modules/pdfjs-dist/build/pdf.worker.mjs";
 function DocumentUpload() {
   const bucket_url = import.meta.env.VITE_APP_BUCKET_URL;
   const [files, setFiles] = useState({
@@ -32,11 +33,11 @@ function DocumentUpload() {
 
   const uploadImages = (e) => {
     e.preventDefault();
-    // const emptyKey = validateObject(files);
-    // if (emptyKey){
-    //   setUploadErr(`Please upload all documents!`)
-    //   return;
-    // }
+    const emptyKey = validateObject(files);
+    if (emptyKey){
+      setUploadErr(`Please upload all documents!`)
+      return;
+    }
     console.log(files);
     const promises = [];
     for (const key in files) {
@@ -71,18 +72,67 @@ function DocumentUpload() {
 
   useEffect(() => {
     const loadPdf = async (pdfUrl) => {
-      const response = await fetch(pdfUrl);
-      const arrayBuffer = await response.arrayBuffer();
-      const blob = new Blob([arrayBuffer], { type: "application/pdf" });
-      const url = URL.createObjectURL(blob);
-      setPreviewUrl(url);
-      setFileName(pdfUrl.substring(pdfUrl.lastIndexOf("/") + 1));
+      console.log(pdfUrl)
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/api/v1/fetch-pdf/?pdfUrl=${encodeURIComponent(pdfUrl)}`);
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const loadingTask = pdfjs.getDocument(url);
+        const pdf = await loadingTask.promise;
+        const page = await pdf.getPage(1);
+        const viewport = page.getViewport({ scale: 1 });
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+        const renderContext = {
+          canvasContext: context,
+          viewport: viewport,
+        };
+        await page.render(renderContext);
+        const imageUrl = canvas.toDataURL();
+        setPreviewUrl(imageUrl);
+        setFileName(pdfUrl.substring(pdfUrl.lastIndexOf("/") + 1));
+      } catch (error) {
+        console.error("Error loading PDF:", error);
+        // Handle error
+      }
     };
-
     if (urls.length) {
       loadPdf(urls[0].key);
     }
-  });
+  }, [urls]);
+
+  console.log(urls);
+  console.log(previewUrl);
+  console.log(fileName);
+
+  const loadPdf = async (pdfUrl) => {
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/v1/fetch-pdf/?pdfUrl=${encodeURIComponent(
+          pdfUrl
+        )}`
+      );
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch PDF: ${response.status} ${response.statusText}`
+        );
+      }
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      setPreviewUrl(url); // Assuming setPreviewUrl is a function to set the URL for preview
+      setFileName(pdfUrl.substring(pdfUrl.lastIndexOf("/") + 1)); // Assuming setFileName is a function to set the file name
+    } catch (error) {
+      console.error("Error loading PDF:", error);
+      // Handle error (e.g., display error message to the user)
+    }
+  };
+
+
+  // loadPdf(
+  //   "https://firebasestorage.googleapis.com/v0/b/shangilia.appspot.com/o/1714021352347_Assets_docs_Ndiritu_Wamae_CV%20(1).pdf?alt=media&token=c026f506-a34e-4a69-a9bf-ca8161d5e099"
+  // );
 
   return (
     <div className='max-w-4xl mx-auto py-8'>

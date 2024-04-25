@@ -17,6 +17,7 @@
     "@react-pdf/renderer": "^3.4.3",
     "@reduxjs/toolkit": "^2.2.3",
     "firebase": "^10.11.0",
+    "pdfjs-dist": "^4.1.392",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^9.1.0",

@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
@@ -33,6 +34,7 @@ class CustomUser(AbstractBaseUser):
         ('admin', 'Admin'),
     )
     username = models.CharField(max_length=100, unique=True)
+    profile_pic = models.CharField(max_length=255, null=True)
     full_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     contact = models.CharField(max_length=15)
@@ -91,3 +93,8 @@ class Donor(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
 
 
+class Application(models.Model):
+    beneficiary = models.ForeignKey(Beneficiary, null= True, on_delete=models.SET_NULL)
+    donor = models.ForeignKey(Donor, on_delete=models.SET_NULL, null=True)
+    description = models.TextField()
+    created_at = models.DateTimeField(default=timezone.now())

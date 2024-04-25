@@ -6,6 +6,21 @@ from .models import CustomUser, Beneficiary
 from .serializers import BeneficiarySerializer, CustomUserSerializer, BeneficiaryReadSerializer
 from rest_framework.permissions import IsAuthenticated
 
+# Proxy server
+import requests
+from django.http import HttpResponse
+
+
+def fetch_pdf(request):
+    pdf_url = request.GET.get('pdfUrl')
+    try:
+        response = requests.get(pdf_url)
+        response.raise_for_status()  # Raise an exception for non-OK responses
+        pdf_data = response.content
+        return HttpResponse(pdf_data, content_type='application/pdf')
+    except requests.RequestException as e:
+        return HttpResponse(f'Error fetching PDF: {e}', status=500)
+
 
 @api_view(['POST'])
 def create_user(request):

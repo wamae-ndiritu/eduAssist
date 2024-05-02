@@ -4,6 +4,7 @@ import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../redux/actions/userActions";
 import { resetUserErr } from "../redux/slices/userSlices";
+import Message from "../components/utils/Message";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
@@ -14,6 +15,7 @@ const LoginPage = () => {
     email: "",
     password: "",
   });
+  const [formErr, setFormErr] = useState(null);
   const handleChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
   };
@@ -24,6 +26,10 @@ const LoginPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault(e);
+    if (userData.email === "" || userData.password === ""){
+      setFormErr("Please fill all the fields!");
+      return;
+    }
     if (userData.username !== "" && userData.password !== "") {
       dispatch(login(userData));
     }
@@ -77,6 +83,9 @@ const LoginPage = () => {
               <p className="bg-red-500 py-2 px-4 rounded text-white">{error}</p>
             )
           )}
+          {
+            formErr && <Message onClose={() => setFormErr(null)}>{formErr}</Message>
+          }
           <div className="flex flex-col mb-2">
             <label htmlFor="email" className="py-1 text-gray-600">
               Email

@@ -11,6 +11,7 @@ import { getProfileInfo, updateProfile } from "../redux/actions/userActions";
 import { validateObject } from "../helpers";
 import Message from "./utils/Message";
 import { resetUserErr } from "../redux/slices/userSlices";
+import ProfileUpdateProgress from "./ProfileUpdateProgress";
 
 export const ProfileHead = () => {
   const {
@@ -203,6 +204,10 @@ const Profile = () => {
           start creating new applications.
         </p>
         <ProfileHead />
+        <ProfileUpdateProgress
+          institutionDone={profileInfo.institution_details_updated}
+          personalInfoDone={profileInfo.personal_info_updated}
+        />
         {loading && <p className='text-sm text-gray-600 py-1'>Saving...</p>}
         {error && (
           <Message onClose={() => dispatch(resetUserErr())}>{error}</Message>

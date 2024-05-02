@@ -29,8 +29,6 @@ function DocumentUpload() {
     setFiles({ ...files, [e.target.name]: e.target.files[0] });
   };
 
-  console.log(urls);
-
   const uploadImages = (e) => {
     e.preventDefault();
     const emptyKey = validateObject(files);

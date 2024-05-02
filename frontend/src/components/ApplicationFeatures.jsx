@@ -102,9 +102,6 @@ function ApplicationFeatures() {
     console.log({...requestInfo, isDisabled, isParentDisabled})
   }
 
-  console.log(uploadErr)
-  console.log(urls)
-
   return (
     <div className='max-w-4xl mx-auto'>
       {uploadErr && (

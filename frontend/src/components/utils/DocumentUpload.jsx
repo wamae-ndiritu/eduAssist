@@ -8,35 +8,38 @@ import {
 import app from "../../firebase";
 import Message from "./Message";
 import { validateObject } from "../../helpers";
-import * as pdfjs from "pdfjs-dist/build/pdf";
+import { useDispatch, useSelector } from "react-redux";
+import { updateProfile } from "../../redux/actions/userActions";
 
-pdfjs.GlobalWorkerOptions.workerSrc =
-  "/node_modules/pdfjs-dist/build/pdf.worker.mjs";
 function DocumentUpload() {
   const bucket_url = import.meta.env.VITE_APP_BUCKET_URL;
+
+  const dispatch = useDispatch();
   const [files, setFiles] = useState({
-    national_id: null,
+    national_id: "",
     KCPE_certificate: "",
     KCSE_certificate: "",
   });
+  const [nationalID, setNationalID] = useState(null);
+  const [kcpe, setKcpe] = useState(null);
+  const [ksce, setKCSE] = useState(null);
+  const [uploading, setUploading] = useState(false);
   const [urls, setUrls] = useState([]);
   const [progress, setProgress] = useState(0);
   const [uploadErr, setUploadErr] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState("");
-  const [fileName, setFileName] = useState("");
 
-  const handleDocumentChange = (e) => {
-    setFiles({ ...files, [e.target.name]: e.target.files[0] });
-  };
+   const { profileInfo } = useSelector(
+     (state) => state.user
+   );
 
-  const uploadImages = (e) => {
-    e.preventDefault();
+  const uploadImages = () => {
+    setUploading(true);
     const emptyKey = validateObject(files);
-    if (emptyKey){
-      setUploadErr(`Please upload all documents!`)
+    if (emptyKey) {
+      setUploadErr(`Please upload all documents!`);
+      setUploading(false);
       return;
     }
-    console.log(files);
     const promises = [];
     for (const key in files) {
       const fileName = new Date().getTime() + files[key].name;
@@ -58,79 +61,44 @@ function DocumentUpload() {
         },
         async () => {
           await getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setUrls((prevState) => [...prevState, { key: downloadURL }]);
+            const newObj = (urls[key] = downloadURL);
+            setUrls((prevState) => [...prevState, newObj]);
           });
         }
       );
     }
-    Promise.all(promises)
-      .then(() => console.log("Upload done!"))
-      .catch((err) => console.log(err));
+    return Promise.all(promises)
+      .then(() => {
+        setUploading(false);
+        console.log("Upload done!");
+      })
+      .catch((err) => {
+        setUploading(false);
+        setUploadErr("Error uploading files!");
+        console.log(err);
+      });
   };
 
-  useEffect(() => {
-    const loadPdf = async (pdfUrl) => {
-      console.log(pdfUrl)
-      try {
-        const response = await fetch(`http://127.0.0.1:8000/api/v1/fetch-pdf/?pdfUrl=${encodeURIComponent(pdfUrl)}`);
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
-        const loadingTask = pdfjs.getDocument(url);
-        const pdf = await loadingTask.promise;
-        const page = await pdf.getPage(1);
-        const viewport = page.getViewport({ scale: 1 });
-        const canvas = document.createElement("canvas");
-        const context = canvas.getContext("2d");
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-        const renderContext = {
-          canvasContext: context,
-          viewport: viewport,
-        };
-        await page.render(renderContext);
-        const imageUrl = canvas.toDataURL();
-        setPreviewUrl(imageUrl);
-        setFileName(pdfUrl.substring(pdfUrl.lastIndexOf("/") + 1));
-      } catch (error) {
-        console.error("Error loading PDF:", error);
-        // Handle error
-      }
+  const handleFileChange = (e, setter) => {
+    const file = e.target.files[0];
+    setFiles({ ...files, [e.target.name]: file });
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setter(event.target.result);
     };
-    if (urls.length) {
-      loadPdf(urls[0].key);
-    }
-  }, [urls]);
-
-  console.log(urls);
-  console.log(previewUrl);
-  console.log(fileName);
-
-  const loadPdf = async (pdfUrl) => {
-    try {
-      const response = await fetch(
-        `http://127.0.0.1:8000/api/v1/fetch-pdf/?pdfUrl=${encodeURIComponent(
-          pdfUrl
-        )}`
-      );
-      if (!response.ok) {
-        throw new Error(
-          `Failed to fetch PDF: ${response.status} ${response.statusText}`
-        );
-      }
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      setPreviewUrl(url); // Assuming setPreviewUrl is a function to set the URL for preview
-      setFileName(pdfUrl.substring(pdfUrl.lastIndexOf("/") + 1)); // Assuming setFileName is a function to set the file name
-    } catch (error) {
-      console.error("Error loading PDF:", error);
-      // Handle error (e.g., display error message to the user)
-    }
+    reader.readAsDataURL(file);
   };
 
-
-  // loadPdf(
-  //   "https://firebasestorage.googleapis.com/v0/b/shangilia.appspot.com/o/1714021352347_Assets_docs_Ndiritu_Wamae_CV%20(1).pdf?alt=media&token=c026f506-a34e-4a69-a9bf-ca8161d5e099"
-  // );
+  const handleDocumentsSave = async () => {
+    await uploadImages();
+    dispatch(
+      updateProfile("documents", {
+        national_id: urls[0],
+        KCPE_certificate: urls[1],
+        KCSE_certificate: urls[2],
+      })
+    );
+  };
 
   return (
     <div className='max-w-4xl mx-auto py-8'>
@@ -143,84 +111,140 @@ function DocumentUpload() {
           {progress}% uploaded...
         </Message>
       )}
-      <div className='my-2 flex justify-end'>
-        <button
-          className='bg-green-500 text-white px-4 py-1 rounded'
-          onClick={uploadImages}
-        >
-          Upload
-        </button>
-      </div>
-      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
-        <div className='bg-gray-100 p-2 rounded-lg'>
-          {previewUrl ? (
-            <div>
-              <img
-                src={previewUrl}
-                alt='PDF Preview'
-                style={{ maxWidth: "100%", maxHeight: "300px" }}
-              />
-              <p>File Name: {fileName}</p>
-            </div>
-          ) : (
-            <div className='w-full h-48 bg-gray-200 flex items-center justify-center rounded-lg mb-2 text-center text-gray-600'>
-              National ID/Birth Certificate
-            </div>
-          )}
-          <div className='flex justify-center'>
-            <input
-              type='file'
-              accept='.pdf'
-              onChange={handleDocumentChange}
-              className=''
-              id='national_id'
-              name='national_id'
+      {uploading && (
+        <Message variant='success' onClose={() => setUploading(false)}>
+          uploading...
+        </Message>
+      )}
+      {profileInfo?.documents_updated ? (
+        <section className='grid md:grid-cols-3 gap-5'>
+          <div className='col-span-1 p-2'>
+            <img
+              src={profileInfo?.national_id_url}
+              alt='National ID/Birth Cert'
+              className='w-full h-full object-cover'
             />
+            <p className='text-center px-8 text-gray-600 my-2'>
+              National ID/Birth Cert.
+            </p>
           </div>
-        </div>
-        <div className='bg-gray-100 p-2 rounded-lg'>
-          <div className='w-full h-48 bg-gray-200 flex items-center justify-center rounded-lg mb-2 text-center text-gray-600'>
-            KCPE Certificate
-          </div>
-          <div className='flex justify-center'>
-            <input
-              type='file'
-              accept='.pdf'
-              onChange={handleDocumentChange}
-              className='hidden'
-              id='KCPE_certificate'
-              name='KCPE_certificate'
+          <div className='col-span-1 p-2'>
+            <img
+              src={profileInfo?.kcpe_certificate_url}
+              alt='KCPE Cert'
+              className='w-full h-full object-cover'
             />
-            <label
-              htmlFor='KCPE_certificate'
-              className='px-4 py-2 border text-green-600 hover:text-green-800 cursor-pointer'
+            <p className='text-center px-8 text-gray-600 my-2'>KCPE Cert.</p>
+          </div>
+          <div className='col-span-1 p-2'>
+            <img
+              src={profileInfo?.kcse_certificate_url}
+              alt='KCSE Cert'
+              className='w-full h-full object-cover'
+            />
+            <p className='text-center px-8 text-gray-600 my-2'>KCSE Cert.</p>
+          </div>
+        </section>
+      ) : (
+        <>
+          <div className='my-2 flex justify-end'>
+            <button
+              className='bg-green-500 text-white px-4 py-1 rounded'
+              onClick={handleDocumentsSave}
             >
-              Select Document
-            </label>
+              Upload
+            </button>
           </div>
-        </div>
-        <div className='bg-gray-100 p-2 rounded-lg'>
-          <div className='w-full h-48 bg-gray-200 flex items-center justify-center rounded-lg mb-2 text-center text-gray-600'>
-            KCSE Certificate
+          <div className='flex gap-5 my-6'>
+            {/* Fees Structure Section */}
+            <div className='mb-8 bg-gray-100 rounded p-1 h-72 w-60 flex flex-col justify-center items-center p-4'>
+              <section className='bg-gray-200 h-full w-full flex justify-center items-center'>
+                {nationalID ? (
+                  <img
+                    src={nationalID}
+                    alt='National ID/Birth Cert'
+                    className='w-full h-full object-cover'
+                  />
+                ) : (
+                  <p className='text-center px-8'>National ID/Birth Cert.</p>
+                )}
+                <input
+                  type='file'
+                  accept='.jpg, .jpeg, .png'
+                  className='hidden'
+                  id='feesStructureInput'
+                  onChange={(e) => handleFileChange(e, setNationalID)}
+                  name='national_id'
+                />
+              </section>
+              <label
+                htmlFor='feesStructureInput'
+                className='text-blue-600 hover:text-blue-800 cursor-pointer block text-center'
+              >
+                Upload National ID
+              </label>
+            </div>
+
+            {/* Fees Statement Section */}
+            <div className='mb-8 bg-gray-100 rounded p-1 h-72 w-60 flex flex-col justify-center items-center p-4'>
+              <section className='bg-gray-200 h-full w-full flex justify-center items-center'>
+                {kcpe ? (
+                  <img
+                    src={kcpe}
+                    alt='KCPE Cert.'
+                    className='w-full h-full object-cover'
+                  />
+                ) : (
+                  <p className='text-center px-8'>KCPE Cert.</p>
+                )}
+                <input
+                  type='file'
+                  accept='.jpg, .jpeg, .png'
+                  className='hidden'
+                  id='feesStatementInput'
+                  onChange={(e) => handleFileChange(e, setKcpe)}
+                  name='KCPE_certificate'
+                />
+              </section>
+              <label
+                htmlFor='feesStatementInput'
+                className='text-blue-600 hover:text-blue-800 cursor-pointer block text-center'
+              >
+                Upload KCPE Cert.
+              </label>
+            </div>
+
+            {/* Results Section */}
+            <div className='mb-4 bg-gray-100 rounded p-1 h-72 w-60 flex flex-col justify-center items-center p-4'>
+              <section className='rounded bg-gray-200 h-full w-full flex justify-center items-center'>
+                {ksce ? (
+                  <img
+                    src={ksce}
+                    alt='KCSE Cert'
+                    className='w-full h-full object-cover'
+                  />
+                ) : (
+                  <p className='text-center px-8'>KSCE Cert.</p>
+                )}
+                <input
+                  type='file'
+                  accept='.jpg, .jpeg, .png'
+                  className='hidden'
+                  id='resultsInput'
+                  onChange={(e) => handleFileChange(e, setKCSE)}
+                  name='KCSE_certificate'
+                />
+              </section>
+              <label
+                htmlFor='resultsInput'
+                className='text-blue-600 hover:text-blue-800 cursor-pointer block text-center'
+              >
+                Upload KCSE Cert.
+              </label>
+            </div>
           </div>
-          <div className='flex justify-center'>
-            <input
-              type='file'
-              accept='.pdf'
-              onChange={handleDocumentChange}
-              className='hidden'
-              id='KCSE_certificate'
-              name='KCSE_certificate'
-            />
-            <label
-              htmlFor='KCSE_certificate'
-              className='px-4 py-2 border text-green-600 hover:text-green-800 cursor-pointer'
-            >
-              Select Document
-            </label>
-          </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 }

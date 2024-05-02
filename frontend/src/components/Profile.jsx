@@ -207,6 +207,7 @@ const Profile = () => {
         <ProfileUpdateProgress
           institutionDone={profileInfo.institution_details_updated}
           personalInfoDone={profileInfo.personal_info_updated}
+          documentsDone={profileInfo.documents_updated}
         />
         {loading && <p className='text-sm text-gray-600 py-1'>Saving...</p>}
         {error && (

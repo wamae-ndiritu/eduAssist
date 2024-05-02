@@ -4,18 +4,20 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
 class CustomUserManager(BaseUserManager):
-    def create_user(self, username, user_type, password=None, **extra_fields):
+    def create_user(self, username, email, user_type, password=None, **extra_fields):
         if not username:
+            raise ValueError('The username must be set')
+        if not email:
             raise ValueError('The username must be set')
         if not user_type:
             raise ValueError('The user type must be set')
-        user = self.model(username=username,
+        user = self.model(username=username, email=email,
                           user_type=user_type, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, username, user_type, password=None, **extra_fields):
+    def create_superuser(self, username, email, user_type, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
 
@@ -24,7 +26,7 @@ class CustomUserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
 
-        return self.create_user(username, user_type, password, **extra_fields)
+        return self.create_user(username, email, user_type, password, **extra_fields)
 
 
 class CustomUser(AbstractBaseUser):
@@ -46,7 +48,7 @@ class CustomUser(AbstractBaseUser):
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['user_type']
+    REQUIRED_FIELDS = ['user_type', 'email']
 
     def has_perm(self, perm, obj=None):
         # Handle custom permissions logic here

@@ -14,6 +14,7 @@ const initialState = {
     personal: false,
     institution: false,
     documents: false,
+    profile_pic: false,
   }
 };
 
@@ -41,6 +42,7 @@ export const userSlice = createSlice({
       state.profileUpdates.personal = false;
       state.profileUpdates.institution = false;
       state.profileUpdates.documents = false;
+      state.profileUpdates.profile_pic = false;
     },
     usersActionStart: (state) => {
       state.loading = true;

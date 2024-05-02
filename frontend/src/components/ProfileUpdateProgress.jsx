@@ -2,28 +2,34 @@ const ProfileUpdateProgress = ({
   personalInfoDone=false,
   institutionDone=false,
   documentsDone=false,
+  profilePictureDone=false,
 }) => {
   // Calculate the total number of steps
-  const totalSteps = 3;
+  const totalSteps = 4;
 
   // Calculate the number of completed steps
   const completedSteps = [
     personalInfoDone,
     institutionDone,
     documentsDone,
+    profilePictureDone,
   ].filter((step) => step).length;
 
   // Calculate the progress percentage
   const progress = (completedSteps / totalSteps) * 100;
 
   return (
-    <div className="w-full my-8 bg-slate-100 p-4">
-      <div className="flex justify-between">
+    <div className='w-full my-8 bg-slate-100 p-4'>
+      <div className='flex justify-between'>
         <StepIndicator step='Personal Info' completed={personalInfoDone} />
         <StepIndicator step='Institution Info' completed={institutionDone} />
         <StepIndicator
           step='Identification Documents'
           completed={documentsDone}
+        />
+        <StepIndicator
+          step='Profile Picture'
+          completed={profilePictureDone}
         />
       </div>
       <div style={{ marginTop: "10px" }}>

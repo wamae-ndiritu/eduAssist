@@ -115,22 +115,29 @@ export const updateProfile =
       let profileUpdate = {}
 
       if (type === "personal") {
-        const {data} = await axios.patch(
+        const { data } = await axios.patch(
           `${BASE_URL}/users/${userInfo?.user?.user}/update/personal-info/`,
           profileData,
           config
         );
         profileUpdate = data;
       } else if (type === "institution") {
-        const {data} = await axios.patch(
+        const { data } = await axios.patch(
           `${BASE_URL}/users/${userInfo?.user?.user}/update/institution-info/`,
           profileData,
           config
         );
-        profileUpdate = data
+        profileUpdate = data;
       } else if (type === "documents") {
-        const {data} = await axios.patch(
+        const { data } = await axios.patch(
           `${BASE_URL}/users/${userInfo?.user?.user}/update/documents/`,
+          profileData,
+          config
+        );
+        profileUpdate = data;
+      } else if (type === "profilePicture") {
+        const { data } = await axios.patch(
+          `${BASE_URL}/users/${userInfo?.user?.user}/update/picture/`,
           profileData,
           config
         );

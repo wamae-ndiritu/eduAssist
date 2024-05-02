@@ -194,6 +194,21 @@ def update_documents(request, profile_id):
             return Response({"message": "Profile not found!"}, status=status.HTTP_404_NOT_FOUND)
     return Response({"message": "Invalid request method!"}, status=status.HTTP_400_BAD_REQUEST)
 
+# 4. Update profile picture
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def update_profile_picture(request, profile_id):
+    if request.method == 'PATCH':
+        profile_pic = request.data.get('profile_pic', None)
+        try:
+            user = CustomUser.objects.get(id=profile_id)
+            user.profile_pic = profile_pic or user.profile_pic
+            user.save()
+            return Response({"profile_pic": True}, status=status.HTTP_200_OK)
+        except CustomUser.DoesNotExist:
+            return Response({"message": "Profile not found!"}, status=status.HTTP_404_NOT_FOUND)
+    return Response({"message": "Invalid request method!"}, status=status.HTTP_400_BAD_REQUEST)
+
 # Get profile info
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

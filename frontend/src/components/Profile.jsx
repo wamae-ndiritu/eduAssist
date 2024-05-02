@@ -12,8 +12,18 @@ import { validateObject } from "../helpers";
 import Message from "./utils/Message";
 import { resetUserErr } from "../redux/slices/userSlices";
 import ProfileUpdateProgress from "./ProfileUpdateProgress";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
+import app from "../firebase";
 
-export const ProfileHead = () => {
+export const ProfileHead = ({profile}) => {
+  const bucket_url = import.meta.env.VITE_APP_BUCKET_URL;
+
+  const dispatch = useDispatch();
   const {
     userInfo: { user },
   } = useSelector((state) => state.user);
@@ -21,8 +31,36 @@ export const ProfileHead = () => {
 
   const handleImageChange = (e) => {
     const selectedImage = e.target.files[0];
-    setProfileImage(URL.createObjectURL(selectedImage));
+    const fileName = new Date().getTime() + selectedImage.name;
+    const storage = getStorage(app, bucket_url);
+    const storageRef = ref(storage, fileName);
+    const uploadTask = uploadBytesResumable(storageRef, selectedImage);
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+        console.log(progress);
+      },
+      (error) => {
+        console.log(error);
+      },
+      async () => {
+        await getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setProfileImage(downloadURL);
+          dispatch(
+            updateProfile("profilePicture", { profile_pic: downloadURL })
+          );
+        });
+      }
+    );
   };
+
+  useEffect(() => {
+    setProfileImage(profile?.profile_pic);
+  }, [profile]);
+
   return (
     <section className='w-full grid grid-cols-1 md:grid-cols-7 gap-3'>
       <div className='col-span-1 md:col-span-2 border rounded p-4'>
@@ -166,6 +204,8 @@ const Profile = () => {
     }
   }, [dispatch, error]);
 
+  console.log(profileInfo)
+
   useEffect(() => {
     if (profileInfo.personal_info_updated) {
       const newObj = {
@@ -176,7 +216,7 @@ const Profile = () => {
         date_of_birth: profileInfo.date_of_birth || "",
       };
       setPersonalInfo(newObj);
-    } 
+    }
     if (profileInfo.institution_details_updated) {
       const newObj = {
         name: profileInfo.institution_name || "",
@@ -203,11 +243,12 @@ const Profile = () => {
           seeking financial aid. Please update any blank section, for you to
           start creating new applications.
         </p>
-        <ProfileHead />
+        <ProfileHead profile={profileInfo} />
         <ProfileUpdateProgress
           institutionDone={profileInfo.institution_details_updated}
           personalInfoDone={profileInfo.personal_info_updated}
           documentsDone={profileInfo.documents_updated}
+          profilePictureDone={profileInfo.profile_pic !== null}
         />
         {loading && <p className='text-sm text-gray-600 py-1'>Saving...</p>}
         {error && (

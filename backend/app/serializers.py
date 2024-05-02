@@ -9,8 +9,8 @@ class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['id', 'username', 'full_name', 'email', 'contact',
-                  'user_type', 'is_staff', 'is_active', 'password']
-        read_only_fields = ['id']  # 'id' should not be included when writing
+                  'user_type', 'is_staff', 'is_active', 'password', 'profile_pic']
+        read_only_fields = ['id', 'profile_pic']  # 'id' should not be included when writing
 
     def create(self, validated_data):
         user = CustomUser.objects.create_user(

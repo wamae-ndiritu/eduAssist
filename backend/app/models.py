@@ -93,10 +93,19 @@ class Beneficiary(models.Model):
 
 class Donor(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    organization = models.CharField(max_length=150, null=True)
+    national_id = models.CharField(max_length=70, null=True)
 
 
-class Application(models.Model):
-    beneficiary = models.ForeignKey(Beneficiary, null= True, on_delete=models.SET_NULL)
+class FinancialAidRequest(models.Model):
+    beneficiary = models.ForeignKey(
+        Beneficiary, null=True, on_delete=models.SET_NULL)
     donor = models.ForeignKey(Donor, on_delete=models.SET_NULL, null=True)
-    description = models.TextField()
+    reason_for_aid = models.CharField(max_length=255, null=False)
+    is_disabled = models.BooleanField(default=False)
+    disability_description = models.CharField(max_length=255, null=True, default=None)
+    is_parent_disabled = models.BooleanField(default=False)
+    parent_disability_description = models.CharField(max_length=255, null=True, default=None)
+    funding_source = models.CharField(max_length=255, null=False)
     created_at = models.DateTimeField(default=timezone.now())
+    is_reviewed = models.BooleanField(default=False)

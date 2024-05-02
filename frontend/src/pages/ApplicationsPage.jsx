@@ -1,9 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Navbar from "../components/Navbar";
 import { ProfileHead } from "../components/Profile";
 import Applications from "../components/Applications";
+import { useDispatch } from "react-redux";
+import { getFinancialRequests } from "../redux/actions/requestAction";
 
 const ApplicationsPage = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getFinancialRequests())
+  }, [dispatch])
+
   return (
     <React.Fragment>
       <Navbar />

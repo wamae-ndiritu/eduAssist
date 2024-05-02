@@ -1,9 +1,11 @@
+from datetime import timedelta
+from django.utils import timezone
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import CustomUser, Beneficiary
-from .serializers import BeneficiarySerializer, CustomUserSerializer, BeneficiaryReadSerializer
+from .models import CustomUser, Beneficiary, FinancialAidRequest
+from .serializers import BeneficiarySerializer, CustomUserSerializer, DonorSerializers, BeneficiaryReadSerializer, FinancialAidRequestSerializer
 from rest_framework.permissions import IsAuthenticated
 
 # Proxy server
@@ -56,6 +58,32 @@ def create_user(request):
                     'token': token
                 }
                 return Response(res_data, status=status.HTTP_201_CREATED)
+            elif user_type == 'donor':
+                donor_data = {
+                    'user': user.id,
+                }
+                donor_serializer = DonorSerializers(
+                    data=donor_data)
+                if donor_serializer.is_valid():
+                    donor_serializer.save()
+                else:
+                    # Delete the user if donor data is not valid
+                    user.delete()
+                    return Response(donor_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                # Generate JWT token
+                refresh = RefreshToken.for_user(user)
+                token = {
+                    'refresh': str(refresh),
+                    'access': str(refresh.access_token),
+                }
+
+                res_data = {
+                    'user': {
+                        **user_serializer.data,
+                        **donor_serializer.data,
+                    },
+                    'token': token
+                }
         return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # Login
@@ -226,4 +254,64 @@ def get_profile_info(request, profile_id):
             return Response(user_info, status=status.HTTP_200_OK)
         except CustomUser.DoesNotExist:
             return Response({"message": "User not found!"}, status=status.HTTP_404_NOT_FOUND)
+    return Response({"message": "Invalid request method!"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+# Create Financial aid request
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_financial_request(request):
+    if request.method == 'POST':
+        user = request.user
+        beneficiary = Beneficiary.objects.get(user__id=user.id)
+        serializer = FinancialAidRequestSerializer(data={**request.data, "beneficiary": beneficiary.id})
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Request created successfully!"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response({"message": "Invalid request method!"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_financial_requests(request):
+    """
+    Get Financial requests filtered by 2 months since created.
+    """
+    if request.method == 'GET':
+
+        # Calculate the date 2 months ago
+        two_months_ago = timezone.now() - timedelta(days=60)
+
+        # Filter the FinancialAidRequest objects created up to 2 months ago
+        financial_requests = FinancialAidRequest.objects.all()
+        requests_info = []
+        for f_request in financial_requests:
+            serializer = FinancialAidRequestSerializer(f_request)
+            beneficiary = Beneficiary.objects.get(id=f_request.beneficiary_id)
+            beneficiary_serializer = BeneficiaryReadSerializer(beneficiary)
+            user = CustomUser.objects.get(id=beneficiary.user_id)
+            user_serializer = CustomUserSerializer(user)
+            info = {
+                **serializer.data,
+                **beneficiary_serializer.data,
+                **user_serializer.data
+            }
+            requests_info.append(info)
+        return Response(requests_info, status=status.HTTP_200_OK)
+    return Response({"message": "Invalid request method!"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_beneficiary_requests(request, beneficiary_id):
+    """
+    Get beneficiary requests
+    """
+    if request.method == 'GET':
+        beneficiary_requests = FinancialAidRequest.objects.filter(beneficiary_id=beneficiary_id)
+        serializer = FinancialAidRequestSerializer(
+            beneficiary_requests, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     return Response({"message": "Invalid request method!"}, status=status.HTTP_400_BAD_REQUEST)

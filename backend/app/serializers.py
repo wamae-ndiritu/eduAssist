@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Beneficiary, CustomUser
+from .models import Beneficiary, CustomUser, Donor, FinancialAidRequest
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
@@ -27,3 +27,15 @@ class BeneficiaryReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Beneficiary
         fields = '__all__'
+
+class DonorSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Donor
+        fields = '__all__'
+
+
+class FinancialAidRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FinancialAidRequest
+        fields = ['reason_for_aid', 'is_disabled', 'disability_description',
+                  'is_parent_disabled', 'parent_disability_description', 'funding_source', 'created_at', 'beneficiary']

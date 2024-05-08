@@ -45,7 +45,7 @@ function App() {
             element={<NewApplicationPage />}
           />
           <Route
-            path='/profile/applications/:id'
+            path='/profile/applications'
             element={<ApplicationsPage />}
           />
           <Route path='/profile/messages/:id' element={<MessagesPage />} />

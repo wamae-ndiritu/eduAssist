@@ -83,7 +83,7 @@ export const ProfileHead = ({profile}) => {
           </li>
           <li className='mb-2'>
             <Link
-              to='/profile/applications/1'
+              to='/profile/applications'
               className='shadow-sm flex gap-3 items-center bg-slate-100 px-4 py-2 rounded text-gray-600 hover:bg-emerald-300 hover:text-white'
             >
               <DescriptionIcon /> <h6>My Applications</h6>

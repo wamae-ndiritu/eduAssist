@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { validateObject } from "../helpers";
 import {
   getStorage,
@@ -8,9 +8,19 @@ import {
 } from "firebase/storage";
 import Message from "./utils/Message";
 import app from "../firebase";
+import { useDispatch, useSelector } from "react-redux";
+import { resetReqState } from "../redux/slices/requestSlices";
+import { createFinancialRequest } from "../redux/actions/requestAction";
+import { useNavigate } from "react-router";
 
 function ApplicationFeatures() {
   const bucket_url = import.meta.env.VITE_APP_BUCKET_URL;
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const {loading, error, success} = useSelector((state) => state.request);
+
   const [feesStructure, setFeesStructure] = useState(null);
   const [feesStatement, setFeesStatement] = useState(null);
   const [results, setResults] = useState(null);
@@ -22,7 +32,7 @@ function ApplicationFeatures() {
   const [uploadErr, setUploadErr] = useState(null);
   const [progress, setProgress] = useState(0);
   const [uploading, setUploading] = useState(false);
-  const [urls, setUrls] = useState([]);
+  const [urls, setUrls] = useState({});
   const [requestInfo, setRequestInfo] = useState({
     reason_for_aid: '',
     disability_description: '',
@@ -52,12 +62,14 @@ function ApplicationFeatures() {
         fee_statement: currentFeeStatement,
         transcript: currentTrascript,
       };
+      console.log(files)
       if (!feesStatement || !feesStructure || !results) {
         setUploadErr(`Please upload all documents!`);
         return;
       }
       const promises = [];
       for (const key in files) {
+        console.log(key)
         const fileName = new Date().getTime() + files[key].name;
         const storage = getStorage(app, bucket_url);
         const storageRef = ref(storage, fileName);
@@ -78,8 +90,8 @@ function ApplicationFeatures() {
           async () => {
             await getDownloadURL(uploadTask.snapshot.ref).then(
               (downloadURL) => {
-                const newObj = urls[key] = downloadURL;
-                setUrls((prevState) => [...prevState, newObj]);
+                console.log(downloadURL)
+                setUrls({...urls, [key]: downloadURL});
               }
             );
           }
@@ -98,9 +110,24 @@ function ApplicationFeatures() {
     };
 
   const handleSubmit = async () => {
-    await uploadImages()
-    console.log({...requestInfo, isDisabled, isParentDisabled})
+    // await uploadImages()
+    console.log(urls)
+    console.log({...requestInfo, is_disabled: isDisabled, is_parent_disabled: isParentDisabled, ...urls})
+    dispatch(
+      createFinancialRequest({
+        ...requestInfo,
+        is_disabled: isDisabled,
+        is_parent_disabled: isParentDisabled,
+        ...urls
+      })
+    );
   }
+
+  useEffect(() => {
+    if (success) {
+      navigate(`/profile/applications`);
+    }
+  }, [navigate, success])
 
   return (
     <div className='max-w-4xl mx-auto'>
@@ -117,6 +144,9 @@ function ApplicationFeatures() {
            uploading...
         </Message>
       )}
+      {
+        loading ? <p>Loading...</p> : error && <Message onClose={() => dispatch(resetReqState())}>{error}</Message>
+      }
       <ul className='list-decimal'>
         <li className='flex flex-col mb-2 mt-4'>
           <h6 className='text-gray-600'>

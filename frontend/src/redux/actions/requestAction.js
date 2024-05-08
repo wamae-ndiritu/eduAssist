@@ -3,7 +3,7 @@ import { createFinancialRequestSuccess, getFinancialRequestDetailsSuccess, getFi
 import axios from "redaxios";
 import { logout } from "./userActions";
 
-export const createFinancialRequest = () => async(dispatch, getState) => {
+export const createFinancialRequest = (requestData) => async(dispatch, getState) => {
    try {
     dispatch(requestStart());
 
@@ -20,10 +20,12 @@ export const createFinancialRequest = () => async(dispatch, getState) => {
 
     await axios.post(
       `${BASE_URL}/financial-requests/create/`,
+      requestData,
       config
     );
     dispatch(createFinancialRequestSuccess());
   } catch (err) {
+    console.log(err)
     const errMsg =
       err?.data && err?.data?.length
         ? err.data[0]?.message

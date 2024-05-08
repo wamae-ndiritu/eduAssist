@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useDispatch } from "react-redux";
 import { logout } from "../../redux/actions/userActions";
@@ -11,24 +12,19 @@ const SideBar = () => {
     dispatch(logout());
   };
   return (
-    <div className='bg-slate-100 text-black w-48 py-4 border-r'>
-      <div className='w-full border-b px-2 flex flex-col items-center'>
-        <img
-          src='/qwetu.jpeg'
-          alt='spms'
-          className='w-32 h-14 object-cover rounded'
-        />
-        <h5 className='my-3 text-xl font-semibold'>eduAssist</h5>
+    <div className='bg-emerald-300 text-black w-48 pb-4 border-r'>
+      <div className='w-full bg-green-600 border-b px-2 py-3 flex flex-col items-center'>
+        <h5 className='my-3 text-2xl text-white font-semibold'>eduAssist</h5>
       </div>
       <div className='px-2 py-4'>
         <ul className='list-type-none px-4'>
           <li className='my-1'>
             <NavLink
-              to='/my-account'
+              to='/dashboard'
               className={({ isActive }) =>
                 isActive
-                  ? "flex gap-3 p-2 bg-orange-600 text-white"
-                  : "flex gap-3 p-2 hover:bg-orange-600 hover:text-white"
+                  ? "flex gap-3 p-2 bg-green-600 text-white"
+                  : "flex gap-3 p-2 hover:bg-green-600 hover:text-white"
               }
             >
               <DashboardIcon />
@@ -37,11 +33,24 @@ const SideBar = () => {
           </li>
           <li className=''>
             <NavLink
-              to='/profile'
+              to='/dashboard/reviews'
               className={({ isActive }) =>
                 isActive
-                  ? "flex gap-3 p-2 bg-orange-600 text-white"
-                  : "flex gap-3 p-2 hover:bg-orange-600 hover:text-white"
+                  ? "flex gap-3 p-2 bg-green-600 text-white"
+                  : "flex gap-3 p-2 hover:bg-green-600 hover:text-white"
+              }
+            >
+              <RequestQuoteIcon />
+              <h6>My Reviews</h6>
+            </NavLink>
+          </li>
+          <li className=''>
+            <NavLink
+              to='/dashboard/profile'
+              className={({ isActive }) =>
+                isActive
+                  ? "flex gap-3 p-2 bg-green-600 text-white"
+                  : "flex gap-3 p-2 hover:bg-green-600 hover:text-white"
               }
             >
               <AccountCircleIcon />
@@ -50,7 +59,7 @@ const SideBar = () => {
           </li>
           <li className='my-1'>
             <button
-              className='flex gap-3 p-2 cursor-pointer hover:bg-orange-600 hover:text-white'
+              className='flex gap-3 p-2 cursor-pointer hover:bg-green-600 hover:text-white'
               onClick={handleLogout}
             >
               <LogoutIcon />

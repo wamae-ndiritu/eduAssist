@@ -293,21 +293,36 @@ def get_financial_requests(request):
 
         # Filter the FinancialAidRequest objects created up to 2 months ago
         financial_requests = FinancialAidRequest.objects.all()
-        requests_info = []
-        for f_request in financial_requests:
-            serializer = FinancialAidRequestSerializer(f_request)
-            beneficiary = Beneficiary.objects.get(id=f_request.beneficiary_id)
-            beneficiary_serializer = BeneficiaryReadSerializer(beneficiary)
-            user = CustomUser.objects.get(id=beneficiary.user_id)
-            user_serializer = CustomUserSerializer(user)
-            info = {
-                **serializer.data,
-                **beneficiary_serializer.data,
-                **user_serializer.data
-            }
-            requests_info.append(info)
+        requests_info = [{"id": f_request.id, "profile_pic": f_request.beneficiary.user.profile_pic, "reason_for_aid": f_request.reason_for_aid, "created_at": f_request.created_at, "full_name": f_request.beneficiary.user.full_name, "institution_name": f_request.beneficiary.institution_name } for f_request in financial_requests]
         return Response(requests_info, status=status.HTTP_200_OK)
     return Response({"message": "Invalid request method!"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_financial_request(request, request_id):
+    """
+    Get Financial request by ID
+    """
+    try:
+        financial_request = FinancialAidRequest.objects.get(id=request_id)
+        beneficary = Beneficiary.objects.get(id=financial_request.beneficiary_id)
+        user = CustomUser.objects.get(id=beneficary.user_id)
+        f_id = financial_request.id
+        f_serializer = FinancialAidRequestSerializer(financial_request)
+        b_serializer = BeneficiaryReadSerializer(beneficary)
+        u_serializer = CustomUserSerializer(user)
+
+        request_info = {
+            **b_serializer.data,
+            **u_serializer.data,
+            **f_serializer.data,
+            "id": f_id
+        }
+
+        return Response(request_info, status=status.HTTP_200_OK)
+    except FinancialAidRequest.DoesNotExist:
+        return Response({"message": "Not Found!"}, status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['GET'])

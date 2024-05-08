@@ -18,6 +18,9 @@ import ApplicationsPage from "./pages/ApplicationsPage";
 import MessagesPage from "./pages/MessagesPage";
 import FinancialAidRequests from "./components/donorsComponents/FinancialAidRequests";
 import DashboardLayout from "./components/donorsComponents/DashboardLayout";
+import FinancialRequestDetails from "./components/donorsComponents/FinancialRequestDetails";
+import UserReviews from "./components/donorsComponents/UserReviews";
+import DonorProfile from "./components/donorsComponents/DonorProfile";
 
 const ProtectedLayout = () => {
   const { userInfo } = useSelector((state) => state.user);
@@ -48,9 +51,12 @@ function App() {
           <Route path='/profile/messages/:id' element={<MessagesPage />} />
         </Route>
         <Route element={<DashboardLayout />}>
+          <Route path='/dashboard' element={<FinancialAidRequests />} />
+          <Route path='/dashboard/reviews' element={<UserReviews />} />
+          <Route path='/dashboard/profile' element={<DonorProfile />} />
           <Route
-            path='/dashboard'
-            element={<FinancialAidRequests />}
+            path='/financial-requests/:id'
+            element={<FinancialRequestDetails />}
           />
         </Route>
         <Route path='*' element={<NotFoundPage />} />

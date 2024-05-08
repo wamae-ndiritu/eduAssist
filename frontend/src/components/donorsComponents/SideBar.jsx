@@ -26,6 +26,7 @@ const SideBar = () => {
                   ? "flex gap-3 p-2 bg-green-600 text-white"
                   : "flex gap-3 p-2 hover:bg-green-600 hover:text-white"
               }
+              end
             >
               <DashboardIcon />
               <h6>Dashboard</h6>

@@ -3,7 +3,17 @@ import RateReviewIcon from "@mui/icons-material/RateReview";
 import RecommendIcon from "@mui/icons-material/Recommend";
 import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
 import RequestCard from "./RequestCard";
+import {useDispatch, useSelector} from "react-redux";
+import { useEffect } from "react";
+import { getFinancialRequests } from "../../redux/actions/requestAction";
 const FinancialAidRequests = () => {
+   const dispatch = useDispatch();
+
+   const { financialRequests } = useSelector((state) => state.request);
+
+   useEffect(() => {
+     dispatch(getFinancialRequests());
+   }, [dispatch]);
   return (
     <div>
       <section className='w-full grid grid-cols-1 md:grid-cols-4 gap-3'>
@@ -69,7 +79,11 @@ const FinancialAidRequests = () => {
         </div>
       </section>
       <section className="my-5 flex flex-wrap gap-3">
-        <RequestCard />
+        {
+          financialRequests.map((request) => {
+            return <RequestCard info={request }/>;
+          })
+        }
       </section>
     </div>
   );

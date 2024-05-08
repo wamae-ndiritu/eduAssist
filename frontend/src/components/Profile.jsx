@@ -204,7 +204,6 @@ const Profile = () => {
     }
   }, [dispatch, error]);
 
-  console.log(profileInfo)
 
   useEffect(() => {
     if (profileInfo.personal_info_updated) {

@@ -4,7 +4,6 @@ import {
   Route,
   Navigate,
   Outlet,
-  Link,
 } from "react-router-dom";
 import "./index.css";
 import RegisterPage from "./pages/RegisterPage";
@@ -24,19 +23,6 @@ const ProtectedLayout = () => {
   const { userInfo } = useSelector((state) => state.user);
   if (userInfo?.token?.access) {
     return <Outlet />;
-  }
-  return <Navigate to='/login' />;
-};
-
-const DonorLayout = () => {
-  // const { userInfo } = useSelector((state) => state.user);
-  const is_donor = true;
-  if (is_donor) {
-    return (
-      <DashboardLayout>
-        <Outlet />
-      </DashboardLayout>
-    );
   }
   return <Navigate to='/login' />;
 };
@@ -61,9 +47,9 @@ function App() {
           />
           <Route path='/profile/messages/:id' element={<MessagesPage />} />
         </Route>
-        <Route element={<DonorLayout />}>
+        <Route element={<DashboardLayout />}>
           <Route
-            path='/financial-requests'
+            path='/dashboard'
             element={<FinancialAidRequests />}
           />
         </Route>

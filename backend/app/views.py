@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import CustomUser, Beneficiary, FinancialAidRequest
+from .models import CustomUser, Beneficiary, Donor, FinancialAidRequest
 from .serializers import BeneficiarySerializer, CustomUserSerializer, DonorSerializers, BeneficiaryReadSerializer, FinancialAidRequestSerializer
 from rest_framework.permissions import IsAuthenticated
 
@@ -61,6 +61,8 @@ def create_user(request):
             elif user_type == 'donor':
                 donor_data = {
                     'user': user.id,
+                    'organization': request.data.get('organization'),
+                    'national_id': request.data.get('national_id')
                 }
                 donor_serializer = DonorSerializers(
                     data=donor_data)
@@ -84,6 +86,7 @@ def create_user(request):
                     },
                     'token': token
                 }
+                return Response(res_data, status=status.HTTP_201_CREATED)
         return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # Login
@@ -92,6 +95,7 @@ def login(request):
     data = request.data
     password = data.get('password', None)
     email = data.get('email', None)
+    role = data.get('role')
     if not email:
         return Response({"message": "Email required!"}, status=status.HTTP_400_BAD_REQUEST)
     if not password:
@@ -101,10 +105,13 @@ def login(request):
 
         if not user.check_password(password):
             return Response({"message": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
-        beneficiary_serializer = {}
+        other_serializer = {}
         if user.user_type == 'beneficiary':
             beneficiary = Beneficiary.objects.get(user_id=user.id)
-            beneficiary_serializer = BeneficiaryReadSerializer(beneficiary)
+            other_serializer = BeneficiaryReadSerializer(beneficiary)
+        if user.user_type == 'donor':
+            donor = Donor.objects.get(user_id=user.id)
+            other_serializer = DonorSerializers(donor)
 
         serializer = CustomUserSerializer(user)
 
@@ -118,7 +125,7 @@ def login(request):
         res_data = {
             'user': {
                 **serializer.data,
-                **beneficiary_serializer.data,
+                **other_serializer.data,
             },
             'token': token
         }

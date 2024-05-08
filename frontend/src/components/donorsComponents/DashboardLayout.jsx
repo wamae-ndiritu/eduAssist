@@ -1,54 +1,27 @@
-const Sidebar = ({ children }) => {
-  return (
-    <div className='bg-gray-800 text-white h-screen px-8 fixed left-0 top-0 overflow-y-auto'>
-      {children}
-    </div>
-  );
-};
+import { Outlet, Navigate } from "react-router-dom";
+import SideBar from "./SideBar";
+import Navbar from "./Navbar";
+import { useSelector } from "react-redux";
 
-const TopHeader = () => {
-  return (
-    <div className='flex justify-between items-center px-4 py-2'>
-      <div>Logo</div>
-      <div className='flex justify-end items-center px-4 py-2'>
-        <div>User Profile</div>
-        <div>Notifications</div>
+const DashBoardLayout = () => {
+  const { userInfo } = useSelector((state) => state.user);
+  if (userInfo?.token?.access) {
+    return (
+      <div className='flex h-screen overflow-hidden'>
+        <SideBar />
+        <div className='flex flex-col flex-1 overflow-y-auto overflow-x-hidden'>
+          <Navbar />
+          <main>
+            <div className='px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto'>
+              <Outlet />
+            </div>
+          </main>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
+
+  return <Navigate to='/login' />;
 };
 
-const DashboardLayout = ({ children }) => {
-  return (
-    <div className='flex'>
-      {/* Sidebar */}
-      <Sidebar>
-        <h2>Sidebar</h2>
-        <h2>Sidebar</h2>
-        <h2>Sidebar</h2>
-        <h2>Sidebar</h2>
-        <h2>Sidebar</h2>
-        <h2>Sidebar</h2>
-        <h2>Sidebar</h2>
-        <h2>Sidebar</h2>
-        <h2>Sidebar</h2>
-        <h2>Sidebar</h2>
-        <h2>Sidebar</h2>
-        <h2>Sidebar</h2>
-        <h2>Sidebar</h2>
-        <h2>Sidebar</h2>
-        <h2>Sidebar</h2>
-        <h2>Sidebar</h2>
-        <h2>Sidebar</h2>
-        <h2>Sidebar</h2>
-        <h2>Sidebar</h2>
-      </Sidebar>
-      <div className='flex-1 bg-yellow-500 overflow-y-auto'>
-        <TopHeader />
-        <div className='px-16'>{children}</div>
-      </div>
-    </div>
-  );
-};
-
-export default DashboardLayout;
+export default DashBoardLayout;

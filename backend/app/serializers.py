@@ -31,7 +31,7 @@ class BeneficiaryReadSerializer(serializers.ModelSerializer):
 class DonorSerializers(serializers.ModelSerializer):
     class Meta:
         model = Donor
-        fields = '__all__'
+        fields = ['user', 'organization', 'national_id']
 
 
 class FinancialAidRequestSerializer(serializers.ModelSerializer):

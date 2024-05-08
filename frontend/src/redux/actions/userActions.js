@@ -23,6 +23,8 @@ export const register = (userInfo) => async (dispatch) => {
   } catch (err) {
     const errMsg = err?.data
       ? err.data.message
+        ? err.data.message
+        : err.data["email"] || err.data["username"]
       : err.statusText
       ? err.statusText
       : err.message;
@@ -40,8 +42,11 @@ export const login = (userData) => async (dispatch) => {
     dispatch(userLoginSuccess(data));
     localStorage.setItem("userInfo", JSON.stringify(data));
   } catch (err) {
+    console.log(err)
     const errMsg = err?.data
       ? err.data.message
+        ? err.data.message
+        : err.data.message
       : err.statusText
       ? err.statusText
       : err.message;

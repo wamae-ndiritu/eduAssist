@@ -1,65 +1,67 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import { useEffect, useState } from "react";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { register } from "../redux/actions/userActions";
 import { resetUserErr } from "../redux/slices/userSlices";
-
+import Message from "../components/utils/Message";
+import RedirectingDots from "../components/utils/RedirectingDots";
 
 const RegisterPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {loading, error, userInfo:user} = useSelector((state) => state.user);
+  const { loading, error, userInfo: user } = useSelector((state) => state.user);
   const [showOptions, setShowOptions] = useState(true);
   const [showDonorForm, setShowDonorForm] = useState(false);
   const [showBeneficiaryForm, setShowBeneficiaryForm] = useState(false);
   const [userInfo, setUserInfo] = useState({
-    full_name: '',
-    email: '',
-    username: '',
-    user_type: 'beneficiary',
-    contact: '',
-    password: '',
-    confirm_pass: '',
+    full_name: "",
+    email: "",
+    username: "",
+    user_type: "beneficiary",
+    contact: "",
+    password: "",
+    confirm_pass: "",
   });
 
   const [donorForm, setDonorForm] = useState({
-    full_name: '',
-    email: '',
-    contact: '',
-    organization: '',
-    national_id: '',
-    username: '',
-    password: '',
-    confirmPassword: '',
-    user_type: 'donor'
+    full_name: "",
+    email: "",
+    contact: "",
+    organization: "",
+    national_id: "",
+    username: "",
+    password: "",
+    confirmPassword: "",
+    user_type: "donor",
   });
   const [showPass, setShowPass] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
 
   const handleChange = (e) => {
-    setUserInfo({...userInfo, [e.target.name]: e.target.value})
-  }
-
+    setUserInfo({ ...userInfo, [e.target.name]: e.target.value });
+  };
 
   const handleDonorForm = (e) => {
-    setDonorForm({...donorForm, [e.target.name]: e.target.value})
-  }
+    setDonorForm({ ...donorForm, [e.target.name]: e.target.value });
+  };
 
-  const handleSubmit = (e, type) => {
+  const handleBeneficiarySubmit = (e) => {
     e.preventDefault();
-    if (type === 'beneficiary'){
-      dispatch(register(userInfo));
-    } else if (type === 'donor') {
-      dispatch(register(donorForm));
-    }
-  }
+    dispatch(register(userInfo));
+  };
+
+  const handleDonorSubmit = (e) => {
+    e.preventDefault();
+    dispatch(register(donorForm));
+  };
 
   const toggleRegister = (type) => {
     setShowOptions(false);
-    if (type === 'beneficiary'){
+    if (type === "beneficiary") {
       setShowDonorForm(false);
       setShowBeneficiaryForm(true);
-    } else if (type === 'donor') {
+    } else if (type === "donor") {
       setShowBeneficiaryForm(false);
       setShowDonorForm(true);
     }
@@ -67,7 +69,7 @@ const RegisterPage = () => {
 
   const togglePass = () => {
     setShowPass(!showPass);
-  }
+  };
 
   const handleGoBack = () => {
     setUserInfo({
@@ -93,10 +95,10 @@ const RegisterPage = () => {
     setShowBeneficiaryForm(false);
     setShowDonorForm(false);
     setShowOptions(true);
-  }
+  };
 
   useEffect(() => {
-    if (user?.token){
+    if (user?.token) {
       setUserInfo({
         full_name: "",
         email: "",
@@ -106,9 +108,29 @@ const RegisterPage = () => {
         password: "",
         confirm_pass: "",
       });
-      navigate('/')
-    }
-    else if (error){
+      setDonorForm({
+        full_name: "",
+        email: "",
+        contact: "",
+        organization: "",
+        national_id: "",
+        username: "",
+        password: "",
+        confirmPassword: "",
+        user_type: "donor",
+      });
+      setRedirecting(true);
+      const interval = setInterval(() => {
+        setRedirecting(false);
+        if (user?.user?.user_type === 'beneficiary'){
+          navigate("/profile");
+        } else if (user?.user?.user_type === 'donor'){
+          navigate("/dashboard");
+        }
+      }, 5000);
+
+      return () => clearInterval(interval);
+    } else if (error) {
       setUserInfo({
         full_name: "",
         email: "",
@@ -130,17 +152,17 @@ const RegisterPage = () => {
         user_type: "donor",
       });
     }
-  }, [navigate, user, error])
+  }, [navigate, user, error]);
 
-    useEffect(() => {
-      if (error) {
-        const timer = setTimeout(() => {
-          dispatch(resetUserErr());
-        }, 2000);
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        dispatch(resetUserErr());
+      }, 5000);
 
-        return () => clearTimeout(timer);
-      }
-    }, [dispatch, error]);
+      return () => clearTimeout(timer);
+    }
+  }, [dispatch, error]);
 
   return (
     <div className='h-screen py-16 relative regBody bg-emerald-500'>
@@ -191,7 +213,7 @@ const RegisterPage = () => {
         ) : showDonorForm ? (
           <form
             className='w-full md:w-2/5 rounded bg-white p-4 my-5 border border-emerald-500'
-            onSubmit={() => handleSubmit("donor")}
+            onSubmit={handleDonorSubmit}
           >
             <h1 className='text-center text-2xl font-semibold'>
               Register as a Donor
@@ -200,10 +222,17 @@ const RegisterPage = () => {
               <p>Loading...</p>
             ) : (
               error && (
-                <p className='bg-red-500 py-2 px-4 rounded text-white'>
+                <Message onClose={() => dispatch(resetUserErr())}>
                   {error}
-                </p>
+                </Message>
               )
+            )}
+            {redirecting && (
+              <Message variant='success' onClose={() => setRedirecting(false)}>
+                Your account has been created successfully! Please wait as
+                you&apos;re redirected{" "}
+                <RedirectingDots redirecting={redirecting} />
+              </Message>
             )}
             <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
               <div className='col-span-1 flex flex-col mb-2'>
@@ -322,7 +351,7 @@ const RegisterPage = () => {
                   id='confirmPass'
                   required
                   name='confirmPassword'
-                  value={donorForm.confirmPassowrd}
+                  value={donorForm.confirmPassword}
                   onChange={handleDonorForm}
                 />
               </div>
@@ -361,7 +390,7 @@ const RegisterPage = () => {
           showBeneficiaryForm && (
             <form
               className='w-full md:w-2/5 rounded bg-white p-4 my-5 border border-emerald-500'
-              onSubmit={() => handleSubmit("beneficiary")}
+              onSubmit={handleBeneficiarySubmit}
             >
               <h1 className='text-center text-2xl font-semibold'>
                 Register as a Beneficiary
@@ -370,10 +399,20 @@ const RegisterPage = () => {
                 <p>Loading...</p>
               ) : (
                 error && (
-                  <p className='bg-red-500 py-2 px-4 rounded text-white'>
+                  <Message onClose={() => dispatch(resetUserErr())}>
                     {error}
-                  </p>
+                  </Message>
                 )
+              )}
+              {redirecting && (
+                <Message
+                  variant='success'
+                  onClose={() => setRedirecting(false)}
+                >
+                  Your account has been created successfully! Please wait as
+                  you&apos;re redirected{" "}
+                  <RedirectingDots redirecting={redirecting} />
+                </Message>
               )}
               <div className='flex flex-col mb-2'>
                 <label htmlFor='b_name' className='py-1 text-gray-600'>
@@ -450,7 +489,10 @@ const RegisterPage = () => {
                   />
                 </div>
                 <div className='flex flex-col'>
-                  <label htmlFor='b_confirm_pass' className='pt-1 text-gray-600'>
+                  <label
+                    htmlFor='b_confirm_pass'
+                    className='pt-1 text-gray-600'
+                  >
                     Confirm Password
                   </label>
                   <input
@@ -463,7 +505,11 @@ const RegisterPage = () => {
                   />
                 </div>
               </div>
-              <button type='button' className='flex gap-3 my-2 text-gray-600' onClick={togglePass}>
+              <button
+                type='button'
+                className='flex gap-3 my-2 text-gray-600'
+                onClick={togglePass}
+              >
                 <RemoveRedEyeIcon />
                 <p>Show password</p>
               </button>

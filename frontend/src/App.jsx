@@ -4,6 +4,7 @@ import {
   Route,
   Navigate,
   Outlet,
+  Link,
 } from "react-router-dom";
 import "./index.css";
 import RegisterPage from "./pages/RegisterPage";
@@ -16,11 +17,26 @@ import { useSelector } from "react-redux";
 import NewApplicationPage from "./pages/NewApplicationPage";
 import ApplicationsPage from "./pages/ApplicationsPage";
 import MessagesPage from "./pages/MessagesPage";
+import FinancialAidRequests from "./components/donorsComponents/FinancialAidRequests";
+import DashboardLayout from "./components/donorsComponents/DashboardLayout";
 
 const ProtectedLayout = () => {
   const { userInfo } = useSelector((state) => state.user);
   if (userInfo?.token?.access) {
     return <Outlet />;
+  }
+  return <Navigate to='/login' />;
+};
+
+const DonorLayout = () => {
+  // const { userInfo } = useSelector((state) => state.user);
+  const is_donor = true;
+  if (is_donor) {
+    return (
+      <DashboardLayout>
+        <Outlet />
+      </DashboardLayout>
+    );
   }
   return <Navigate to='/login' />;
 };
@@ -43,9 +59,12 @@ function App() {
             path='/profile/applications/:id'
             element={<ApplicationsPage />}
           />
+          <Route path='/profile/messages/:id' element={<MessagesPage />} />
+        </Route>
+        <Route element={<DonorLayout />}>
           <Route
-            path='/profile/messages/:id'
-            element={<MessagesPage/>}
+            path='/financial-requests'
+            element={<FinancialAidRequests />}
           />
         </Route>
         <Route path='*' element={<NotFoundPage />} />

@@ -63,7 +63,6 @@ const LoginPage = () => {
         dispatch(resetUserErr());
       }, 2000);
 
-      // Clear the timeout when the component unmounts or when useEffect runs again
       return () => clearTimeout(timer);
     }
   }, [dispatch, error]);
@@ -87,7 +86,7 @@ const LoginPage = () => {
             <p>Loading...</p>
           ) : (
             error && (
-              <p className='bg-red-500 py-2 px-4 rounded text-white'>{error}</p>
+             <Message onClose={() => dispatch(resetUserErr())}>{error}</Message>
             )
           )}
           {formErr && (

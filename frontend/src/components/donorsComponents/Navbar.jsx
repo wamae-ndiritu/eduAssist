@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 const Navbar = () => {
   const { userInfo } = useSelector((state) => state.user);
+  
   return (
     <div className='bg-emerald-300  px-4 py-2 flex justify-between items-center'>
       <h4 className='text-xl font-semibold'>Donors Dashboard</h4>
@@ -18,7 +19,11 @@ const Navbar = () => {
         </span>
         <Link to='/profile'>
           <img
-            src='/profile-icon.jpeg'
+            src={
+              userInfo?.user?.profile_pic
+                ? userInfo?.user?.profile_pic
+                : "/profile-icon.jpeg"
+            }
             alt='profile'
             className='h-16 w-16 rounded-full border border-green-600 object-cover'
           />

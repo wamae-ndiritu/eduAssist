@@ -3,6 +3,10 @@ import {
   userLoginStart,
   userLoginSuccess,
   clearUserState,
+  usersActionStart,
+  updateProfileSuccess,
+  usersActionFail,
+  getProfileInfoSuccess,
 } from "../slices/userSlices";
 import axios from "redaxios";
 import { BASE_URL } from "../../URL";
@@ -19,6 +23,8 @@ export const register = (userInfo) => async (dispatch) => {
   } catch (err) {
     const errMsg = err?.data
       ? err.data.message
+        ? err.data.message
+        : err.data["email"] || err.data["username"]
       : err.statusText
       ? err.statusText
       : err.message;
@@ -36,8 +42,11 @@ export const login = (userData) => async (dispatch) => {
     dispatch(userLoginSuccess(data));
     localStorage.setItem("userInfo", JSON.stringify(data));
   } catch (err) {
+    console.log(err)
     const errMsg = err?.data
       ? err.data.message
+        ? err.data.message
+        : err.data.message
       : err.statusText
       ? err.statusText
       : err.message;
@@ -50,3 +59,111 @@ export const logout = () => (dispatch) => {
   dispatch(clearUserState());
   localStorage.removeItem("userInfo");
 };
+
+// Get profile info
+export const getProfileInfo = () => async (dispatch, getState) => {
+  try {
+    dispatch(usersActionStart());
+
+    const {
+      user: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo?.token?.access}`,
+        "Content-Type": "application/json",
+      },
+    };
+
+    const { data } = await axios.get(
+      `${BASE_URL}/users/${userInfo?.user?.user}/`,
+      config
+    );
+    dispatch(getProfileInfoSuccess(data));
+  } catch (err) {
+    const errMsg =
+      err?.data && err?.data?.length
+        ? err.data[0]?.message
+        : err?.data
+        ? err.data?.message || err.data?.detail
+        : err.statusText;
+    if (
+      errMsg === "Authentication credentials were not provided." ||
+      errMsg === "Given token not valid for any token type"
+    ) {
+      dispatch(logout());
+      dispatch(usersActionFail("Your session has expired! Login again..."));
+    } else {
+      dispatch(usersActionFail(errMsg));
+    }
+  }
+};
+
+// Update profile
+export const updateProfile =
+  (type, profileData) => async (dispatch, getState) => {
+    try {
+      dispatch(usersActionStart());
+
+      const {
+        user: { userInfo },
+      } = getState();
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo?.token?.access}`,
+          "Content-Type": "application/json",
+        },
+      };
+
+      let profileUpdate = {}
+
+      if (type === "personal") {
+        const { data } = await axios.patch(
+          `${BASE_URL}/users/${userInfo?.user?.user}/update/personal-info/`,
+          profileData,
+          config
+        );
+        profileUpdate = data;
+      } else if (type === "institution") {
+        const { data } = await axios.patch(
+          `${BASE_URL}/users/${userInfo?.user?.user}/update/institution-info/`,
+          profileData,
+          config
+        );
+        profileUpdate = data;
+      } else if (type === "documents") {
+        const { data } = await axios.patch(
+          `${BASE_URL}/users/${userInfo?.user?.user}/update/documents/`,
+          profileData,
+          config
+        );
+        profileUpdate = data;
+      } else if (type === "profilePicture") {
+        const { data } = await axios.patch(
+          `${BASE_URL}/users/${userInfo?.user?.user}/update/picture/`,
+          profileData,
+          config
+        );
+        profileUpdate = data;
+      }
+      dispatch(updateProfileSuccess(profileUpdate));
+    } catch (err) {
+      const errMsg =
+        err?.data && err?.data?.length
+          ? err.data[0]?.message
+          : err?.data
+          ? err.data?.message || err.data?.detail
+          : err.statusText;
+      if (
+        errMsg === "Authentication credentials were not provided." ||
+        errMsg === "Given token not valid for any token type"
+      ) {
+        dispatch(logout());
+        dispatch(usersActionFail("Your session has expired! Login again..."));
+      } else {
+        dispatch(usersActionFail(errMsg));
+      }
+    }
+  };

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import HorizontalLinearStepper from "./utils/Stepper"
 
 const HowItWorks = () => {
@@ -7,7 +8,7 @@ const HowItWorks = () => {
         <p className="text-gray-600 py-5 text-center">It takes a few step to start creating new application. To get you started, here are the steps yo&apos;ll follow;</p>
         <HorizontalLinearStepper />
         <div className="mb-3 flex justify-center">
-          <button className="px-4 py-2 rounded-full text-gray-900 text-xl border">Start Application</button>
+          <Link to="/profile" className="px-4 py-2 rounded-full text-gray-900 text-xl border">Start Application</Link>
         </div>
     </div>
   )

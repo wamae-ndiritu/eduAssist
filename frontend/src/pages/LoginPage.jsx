@@ -43,7 +43,10 @@ const LoginPage = () => {
         passowrd: "",
         role: "beneficiary"
       });
-      if (userInfo?.user?.user_type === "donor") {
+      if (
+        userInfo?.user?.user_type === "donor" ||
+        userInfo?.user?.user_type === "admin"
+      ) {
         navigate("/dashboard");
       } else if (userInfo?.user?.user_type === "beneficiary") {
         navigate("/profile");
@@ -76,7 +79,9 @@ const LoginPage = () => {
             <p>Loading...</p>
           ) : (
             error && (
-             <Message onClose={() => dispatch(resetUserErr())}>{error}</Message>
+              <Message onClose={() => dispatch(resetUserErr())}>
+                {error}
+              </Message>
             )
           )}
           {formErr && (
@@ -86,10 +91,17 @@ const LoginPage = () => {
             <label htmlFor='role' className='py-1 text-gray-600'>
               Select Role
             </label>
-            <select value={userData.role} name="role" onChange={handleChange} className='border py-2 rounded px-2 focus:outline-emerald-300' required>
+            <select
+              value={userData.role}
+              name='role'
+              onChange={handleChange}
+              className='border py-2 rounded px-2 focus:outline-emerald-300'
+              required
+            >
               <option>---Select Role---</option>
               <option value='donor'>Donor</option>
               <option value='beneficiary'>Beneficiary</option>
+              <option value='admin'>Admin</option>
             </select>
           </div>
           <div className='flex flex-col mb-2'>

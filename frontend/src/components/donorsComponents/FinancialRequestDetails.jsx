@@ -12,6 +12,8 @@ const FinancialRequestDetails = () => {
     (state) => state.request
   );
 
+  const {userInfo} = useSelector((state) => state.user);
+
   const calculateAge = (birthday) => {
   const dob = new Date(birthday);
   const now = new Date();
@@ -31,12 +33,41 @@ const FinancialRequestDetails = () => {
     dispatch(getFinancialRequestDetails(requestId));
   }, [dispatch, requestId]);
 
-  console.log(financialRequest);
   return (
     <section className='w-full border p-4'>
-      <h3 className='text-lg text-gray-600 capitalize mt-5'>
-        Student Information
-      </h3>
+      <div className='flex justify-between items-center'>
+        <h1 className='text-gray uppercase my-auto'>
+          Application No: #{financialRequest.id}
+        </h1>
+        <div className='flex items-center gap-2'>
+          <p className='text-gray-600'>Status</p>
+          <span
+            className={`bg-slate-100 rounded-full px-4 py-1 ${
+              financialRequest.status === "pending"
+                ? "text-blue-300"
+                : financialRequest.status === "approved"
+                ? "text-green-500"
+                : financialRequest.status === "rejected" && "text-red-400"
+            }`}
+          >
+            {financialRequest.status}
+          </span>
+        </div>
+      </div>
+      <div className='flex justify-between items-center my-2'>
+        <h3 className='text-lg text-green-600 capitalize'>
+          Applicant Information
+        </h3>
+        <div className='flex gap-3'>
+          <h6 className='my-auto text-gray-600'>Change Status</h6>
+          <button className='bg-blue-400 px-2 py-1 text-white rounded'>
+            Approve
+          </button>
+          <button className='bg-red-300 px-2 py-1 text-white rounded'>
+            Reject
+          </button>
+        </div>
+      </div>
       <div className='flex items-end gap-5'>
         <img
           src={

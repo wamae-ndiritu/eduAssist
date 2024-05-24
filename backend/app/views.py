@@ -4,9 +4,14 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import CustomUser, Beneficiary, Donor, FinancialAidRequest
+from .models import CustomUser, Beneficiary, Donor, FinancialAidRequest, Notification
 from .serializers import BeneficiarySerializer, CustomUserSerializer, DonorSerializers, BeneficiaryReadSerializer, FinancialAidRequestSerializer
 from rest_framework.permissions import IsAuthenticated
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+from django.core.mail import send_mail
+from django.conf import settings
+from django.views.decorators.http import require_POST
 
 # Proxy server
 import requests
@@ -122,13 +127,24 @@ def login(request):
             'access': str(refresh.access_token),
         }
 
-        res_data = {
-            'user': {
-                **serializer.data,
-                **other_serializer.data,
-            },
-            'token': token
-        }
+        res_data = {}
+
+        if user.user_type != 'donor' and user.is_superuser:
+            res_data = {
+                'user': {
+                    **serializer.data,
+                    "user_type": "admin"
+                },
+                'token': token
+            }
+        else:
+            res_data = {
+                'user': {
+                    **serializer.data,
+                    **other_serializer.data
+                },
+                'token': token
+            }
         return Response(res_data, status=status.HTTP_200_OK)
 
     except CustomUser.DoesNotExist:
@@ -337,3 +353,47 @@ def get_beneficiary_requests(request, beneficiary_id):
             beneficiary_requests, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response({"message": "Invalid request method!"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def update_financial_aid_request_status(request, request_id):
+    try:
+        financial_aid_request = get_object_or_404(
+            FinancialAidRequest, pk=request_id)
+        action = request.POST.get('action')
+
+        if action not in ['approve', 'reject']:
+            return JsonResponse({'message': 'Invalid action'}, status=400)
+
+        if action == 'approve':
+            financial_aid_request.status = 'approved'
+            message = 'Your financial aid request has been approved.'
+        elif action == 'reject':
+            reject_message = request.POST.get('message', None)
+            financial_aid_request.status = 'rejected'
+            message = f"Your financial aid request has been rejected. {reject_message}"
+
+        financial_aid_request.save()
+        
+        # Get the associated user (assuming the Beneficiary model has a user field)
+        user = financial_aid_request.beneficiary.user
+
+        # Create a notification
+        Notification.objects.create(user=user, message=message)
+
+        # Send an email notification
+        send_mail(
+            'Financial Aid Request Update',
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [user.email],
+            fail_silently=False,
+        )
+
+        return JsonResponse({'status': 'success', 'message': message})
+
+    except FinancialAidRequest.DoesNotExist:
+        return JsonResponse({'message': 'FinancialAidRequest not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'message': str(e)}, status=500)

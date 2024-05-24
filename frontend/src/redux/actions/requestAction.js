@@ -1,5 +1,5 @@
 import { BASE_URL } from "../../URL";
-import { createFinancialRequestSuccess, getFinancialRequestDetailsSuccess, getFinancialRequestSuccess, requestFail, requestStart } from "../slices/requestSlices";
+import { createFinancialRequestSuccess, getFinancialRequestDetailsSuccess, getFinancialRequestSuccess, requestFail, requestStart, updateFinancialRequestSuccess } from "../slices/requestSlices";
 import axios from "redaxios";
 import { logout } from "./userActions";
 
@@ -116,3 +116,44 @@ export const getFinancialRequestDetails = (requestId) => async (dispatch, getSta
     }
   }
 };
+
+export const updateFinancialRequestStatus =
+  (requestId, body) => async (dispatch, getState) => {
+    try {
+      dispatch(requestStart());
+
+      const {
+        user: { userInfo },
+      } = getState();
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo?.token?.access}`,
+          "Content-Type": "application/json",
+        },
+      };
+
+      await axios.post(
+        `${BASE_URL}/financial-requests/${requestId}/update-status/`,
+        body,
+        config
+      );
+      dispatch(updateFinancialRequestSuccess());
+    } catch (err) {
+      const errMsg =
+        err?.data && err?.data?.length
+          ? err.data[0]?.message
+          : err?.data
+          ? err.data?.message || err.data?.detail
+          : err.statusText;
+      if (
+        errMsg === "Authentication credentials were not provided." ||
+        errMsg === "Given token not valid for any token type"
+      ) {
+        dispatch(logout());
+        dispatch(requestFail("Your session has expired! Login again..."));
+      } else {
+        dispatch(requestFail(errMsg));
+      }
+    }
+  };

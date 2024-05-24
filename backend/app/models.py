@@ -100,7 +100,8 @@ class Donor(models.Model):
 class FinancialAidRequest(models.Model):
     statusChoices = [
         ('approved', 'Approved'),
-        ('rejected', 'Rejected')
+        ('rejected', 'Rejected'),
+        ('pending', 'Pending')
     ]
     beneficiary = models.ForeignKey(
         Beneficiary, null=True, on_delete=models.SET_NULL)
@@ -122,5 +123,14 @@ class FinancialAidRequest(models.Model):
     fee_structure = models.TextField(null=True, default=None)
     fee_statement = models.TextField(null=True, default=None)
     proof_of_background = models.TextField(null=True, default=None)
-    status = models.CharField(max_length=100, choices=statusChoices, default='approved')
+    status = models.CharField(max_length=100, choices=statusChoices, default='pending')
 
+
+class Notification(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'Notification for {self.user.username} - {self.message}'

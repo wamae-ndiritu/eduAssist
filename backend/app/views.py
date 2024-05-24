@@ -213,7 +213,6 @@ def update_documents(request, profile_id):
         n_id = request.data.get('national_id', None)
         kcpe = request.data.get('KCPE_certificate', None)
         kcse = request.data.get('KCSE_certificate', None)
-        print(request.data)
         try:
             profile = Beneficiary.objects.get(user__id=profile_id)
             if not profile.institution_details_updated:

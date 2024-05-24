@@ -23,7 +23,7 @@ function ApplicationFeatures() {
   const [feesStructure, setFeesStructure] = useState(null);
   const [feesStatement, setFeesStatement] = useState(null);
   const [results, setResults] = useState(null);
-  const [familyBackground, setFamilityBackground] = useState(null);
+  const [familyBackground, setFamilyBackground] = useState(null);
   const [currentFeeStructure, setCurrentFeeStructure] = useState({});
   const [currentFeeStatement, setCurrentFeeStatement] = useState({});
   const [currentTrascript, setCurrentTranscript] = useState({});
@@ -37,8 +37,8 @@ function ApplicationFeatures() {
   const [urls, setUrls] = useState({});
   const [requestInfo, setRequestInfo] = useState({
     reason_for_aid: "",
-    disability_description: "",
-    parent_disability_description: "",
+    disability_description: "No description.",
+    parent_disability_description: "No description.",
     funding_source: "",
   });
 
@@ -104,8 +104,7 @@ function ApplicationFeatures() {
         },
         async () => {
           await getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            console.log(downloadURL);
-            setUrls({ ...urls, [key]: downloadURL });
+            setUrls((prevState) => ({...prevState, [key]: downloadURL}));
           });
         }
       );
@@ -122,6 +121,8 @@ function ApplicationFeatures() {
       });
   };
 
+  console.log(urls)
+
   const handleSubmit = async () => {
     await uploadImages();
     console.log({
@@ -134,8 +135,10 @@ function ApplicationFeatures() {
     });
   };
 
+  console.log(urls)
+
   useEffect(() => {
-    if (urls.length === 4) {
+    if (Object.keys(urls).length === 4) {
       dispatch(
         createFinancialRequest({
           ...requestInfo,
@@ -475,7 +478,7 @@ function ApplicationFeatures() {
             {familyBackground ? (
               <img
                 src={familyBackground}
-                alt='Transcript'
+                alt='Death Certificate/Background Photo'
                 className='w-full h-full object-cover'
               />
             ) : (
@@ -494,7 +497,7 @@ function ApplicationFeatures() {
               className='hidden'
               id='familyBackground'
               onChange={(e) =>
-                handleFileChange(e, setDocument3, setFamilityBackground)
+                handleFileChange(e, setFamilyBackground, setDocument3)
               }
             />
           </section>

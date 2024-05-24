@@ -38,4 +38,4 @@ class FinancialAidRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = FinancialAidRequest
         fields = ['id', 'reason_for_aid', 'is_disabled', 'disability_description',
-                  'is_parent_disabled', 'parent_disability_description', 'funding_source', 'created_at', 'beneficiary', 'fee_structure', 'fee_statement', 'transcript']
+                  'is_parent_disabled', 'parent_disability_description', 'funding_source', 'created_at', 'beneficiary', 'fee_structure', 'fee_statement', 'transcript', 'scholarships', 'bursary', 'well_wishers', 'others', 'is_orphan', 'proof_of_background', 'status']

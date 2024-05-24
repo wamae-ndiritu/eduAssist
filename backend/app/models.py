@@ -98,6 +98,10 @@ class Donor(models.Model):
 
 
 class FinancialAidRequest(models.Model):
+    statusChoices = [
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected')
+    ]
     beneficiary = models.ForeignKey(
         Beneficiary, null=True, on_delete=models.SET_NULL)
     donor = models.ForeignKey(Donor, on_delete=models.SET_NULL, null=True)
@@ -106,9 +110,17 @@ class FinancialAidRequest(models.Model):
     disability_description = models.TextField(null=True, default=None)
     is_parent_disabled = models.BooleanField(default=False)
     parent_disability_description = models.TextField(null=True, default=None)
-    funding_source = models.TextField(null=False)
+    funding_source = models.TextField(null=True, blank=True)
+    is_orphan = models.BooleanField(default=False)
+    scholarships = models.BooleanField(default=False)
+    bursary = models.BooleanField(default=False)
+    well_wishers = models.BooleanField(default=False)
+    others = models.BooleanField(default=True)
     created_at = models.DateTimeField(default=timezone.now())
     is_reviewed = models.BooleanField(default=False)
     transcript = models.TextField(null=True, default=None)
     fee_structure = models.TextField(null=True, default=None)
     fee_statement = models.TextField(null=True, default=None)
+    proof_of_background = models.TextField(null=True, default=None)
+    status = models.CharField(max_length=100, choices=statusChoices, default='approved')
+

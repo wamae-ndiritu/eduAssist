@@ -309,7 +309,7 @@ def get_financial_requests(request):
 
         # Filter the FinancialAidRequest objects created up to 2 months ago
         financial_requests = FinancialAidRequest.objects.all().order_by('-created_at')
-        requests_info = [{"id": f_request.id, "profile_pic": f_request.beneficiary.user.profile_pic, "reason_for_aid": f_request.reason_for_aid, "created_at": f_request.created_at, "full_name": f_request.beneficiary.user.full_name, "institution_name": f_request.beneficiary.institution_name } for f_request in financial_requests]
+        requests_info = [{"id": f_request.id, "profile_pic": f_request.beneficiary.user.profile_pic, "reason_for_aid": f_request.reason_for_aid, "created_at": f_request.created_at, "full_name": f_request.beneficiary.user.full_name, "institution_name": f_request.beneficiary.institution_name, "status": f_request.status } for f_request in financial_requests]
         return Response(requests_info, status=status.HTTP_200_OK)
     return Response({"message": "Invalid request method!"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -361,7 +361,7 @@ def update_financial_aid_request_status(request, request_id):
     try:
         financial_aid_request = get_object_or_404(
             FinancialAidRequest, pk=request_id)
-        action = request.POST.get('action')
+        action = request.data.get('action')
 
         if action not in ['approve', 'reject']:
             return JsonResponse({'message': 'Invalid action'}, status=400)
@@ -370,12 +370,12 @@ def update_financial_aid_request_status(request, request_id):
             financial_aid_request.status = 'approved'
             message = 'Your financial aid request has been approved.'
         elif action == 'reject':
-            reject_message = request.POST.get('message', None)
+            reject_message = request.data.get('message', None)
             financial_aid_request.status = 'rejected'
             message = f"Your financial aid request has been rejected. {reject_message}"
 
         financial_aid_request.save()
-        
+
         # Get the associated user (assuming the Beneficiary model has a user field)
         user = financial_aid_request.beneficiary.user
 

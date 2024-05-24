@@ -1,37 +1,54 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getFinancialRequestDetails } from "../../redux/actions/requestAction";
+import { getFinancialRequestDetails, updateFinancialRequestStatus } from "../../redux/actions/requestAction";
+import { resetReqState } from "../../redux/slices/requestSlices";
 
 const FinancialRequestDetails = () => {
   const dispatch = useDispatch();
   const params = useParams();
   const requestId = params.id;
 
-  const { financialRequest, loading, error } = useSelector(
+  const { financialRequest, loading, error, updated } = useSelector(
     (state) => state.request
   );
 
-  const {userInfo} = useSelector((state) => state.user);
+  const { userInfo } = useSelector((state) => state.user);
+
 
   const calculateAge = (birthday) => {
-  const dob = new Date(birthday);
-  const now = new Date();
+    const dob = new Date(birthday);
+    const now = new Date();
 
-  let years = now.getFullYear() - dob.getFullYear();
-  const months = now.getMonth() - dob.getMonth();
-  const days = now.getDate() - dob.getDate();
+    let years = now.getFullYear() - dob.getFullYear();
+    const months = now.getMonth() - dob.getMonth();
+    const days = now.getDate() - dob.getDate();
 
-  if (months < 0 || (months === 0 && days < 0)) {
-    years--;
+    if (months < 0 || (months === 0 && days < 0)) {
+      years--;
+    }
+
+    return years;
+  };
+
+  const handleApprove = () => {
+    alert("Are you sure you want to approve the request?")
+    dispatch(updateFinancialRequestStatus(requestId, {action: 'approve'}))
   }
-
-  return years;
-};
 
   useEffect(() => {
     dispatch(getFinancialRequestDetails(requestId));
   }, [dispatch, requestId]);
+
+  useEffect(() => {
+    if (updated) {
+      const interval = setInterval(() => {
+        dispatch(resetReqState())
+      }, 5000);
+
+      return () => clearInterval(interval);
+    }
+  }, [dispatch, updated])
 
   return (
     <section className='w-full border p-4'>
@@ -58,15 +75,20 @@ const FinancialRequestDetails = () => {
         <h3 className='text-lg text-green-600 capitalize'>
           Applicant Information
         </h3>
-        <div className='flex gap-3'>
-          <h6 className='my-auto text-gray-600'>Change Status</h6>
-          <button className='bg-blue-400 px-2 py-1 text-white rounded'>
-            Approve
-          </button>
-          <button className='bg-red-300 px-2 py-1 text-white rounded'>
-            Reject
-          </button>
-        </div>
+        {userInfo?.user?.user_type === "admin" && (
+          <div className='flex gap-3'>
+            <h6 className='my-auto text-gray-600'>Change Status</h6>
+            <button
+              className='bg-blue-400 px-2 py-1 text-white rounded'
+              onClick={handleApprove}
+            >
+              Approve
+            </button>
+            <button className='bg-red-300 px-2 py-1 text-white rounded'>
+              Reject
+            </button>
+          </div>
+        )}
       </div>
       <div className='flex items-end gap-5'>
         <img

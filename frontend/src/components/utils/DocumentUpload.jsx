@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   getStorage,
   ref,
@@ -27,6 +27,7 @@ function DocumentUpload() {
   const [urls, setUrls] = useState([]);
   const [progress, setProgress] = useState(0);
   const [uploadErr, setUploadErr] = useState(null);
+  const [isUploaded, setIsUploaded] = useState(false);
 
    const { profileInfo } = useSelector(
      (state) => state.user
@@ -70,7 +71,6 @@ function DocumentUpload() {
     return Promise.all(promises)
       .then(() => {
         setUploading(false);
-        console.log("Upload done!");
       })
       .catch((err) => {
         setUploading(false);
@@ -91,18 +91,49 @@ function DocumentUpload() {
 
   const handleDocumentsSave = async () => {
     await uploadImages();
-    dispatch(
-      updateProfile("documents", {
-        national_id: urls[0],
-        KCPE_certificate: urls[1],
-        KCSE_certificate: urls[2],
-      })
-    );
   };
+
+  useEffect(() => {
+    if (urls.length === 3){
+       dispatch(
+         updateProfile("documents", {
+           national_id: urls[0],
+           KCPE_certificate: urls[1],
+           KCSE_certificate: urls[2],
+         })
+       );
+       setUrls([]);
+    }
+  }, [dispatch, urls])
+
+  useEffect(() => {
+    if (profileInfo?.documents_updated){
+      setIsUploaded(true);
+    }
+  }, [profileInfo])
 
   return (
     <div className='max-w-4xl mx-auto py-8'>
-      <h2 className='text-2xl font-bold'>Upload Documents</h2>
+      <div className='flex justify-between items-center'>
+        <h2 className='text-2xl font-bold'>Upload Documents</h2>
+        {isUploaded ? (
+          <button
+            className='bg-green-500 px-2 py-1 rounded text-white'
+            onClick={() => setIsUploaded(false)}
+          >
+            Update Documents
+          </button>
+        ) : (
+          profileInfo?.documents_updated && (
+            <button
+              className='bg-gray-200 px-2 py-1 rounded text-black'
+              onClick={() => setIsUploaded(true)}
+            >
+              View updated docs
+            </button>
+          )
+        )}
+      </div>
       {uploadErr && (
         <Message onClose={() => setUploadErr(null)}>{uploadErr}</Message>
       )}
@@ -116,7 +147,7 @@ function DocumentUpload() {
           uploading...
         </Message>
       )}
-      {profileInfo?.documents_updated ? (
+      {isUploaded ? (
         <section className='grid md:grid-cols-3 gap-5'>
           <div className='col-span-1 p-2'>
             <img

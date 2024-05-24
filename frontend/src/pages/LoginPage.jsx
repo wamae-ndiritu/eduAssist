@@ -51,21 +51,11 @@ const LoginPage = () => {
     } else if (error) {
       setUserData({
         email: "",
-        password: "beneficiary",
-        role: "",
+        password: "",
+        role: "beneficiary",
       });
     }
   }, [navigate, userInfo, error]);
-
-  useEffect(() => {
-    if (error) {
-      const timer = setTimeout(() => {
-        dispatch(resetUserErr());
-      }, 2000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [dispatch, error]);
 
   return (
     <div className='h-screen relative regBody'>

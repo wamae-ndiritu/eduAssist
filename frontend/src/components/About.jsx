@@ -13,22 +13,12 @@ const About = () => {
             alt='EduAssist'
             className='h-full w-full object-cover rounded-lg'
           />
-          {/* <h1 className='p-4 text-2xl font-bold'>EduAssist Connect Platform</h1>
-          <p className='p-3 font-semibold text-xl '>
-            Are you looking for education fanancial assist? Then look no
-            further, EduAssit got you covered!!
-          </p>
-          <p className='p-3 font-semibold text-xl '>
-            Singup with us for free! make your application and wait for your
-            dream of studing become a reality beside having no finances to fund
-            your studies.
-          </p> */}
         </section>
         <section className='col-span-1 md:col-span-3'>
           <p className='p-3'>
             EduAssist is an online platform created due to the high number of
-            students sicking for financial aid to fund thier studies. It is
-            obvious that there are still a good number of good sarmaritans who
+            students seeking for financial aid to fund thier studies. It is
+            obvious that there are still a good number of good Samaritans who
             would wish to offer assistance to such students but lack ways to
             connect with them.
           </p>
@@ -38,7 +28,7 @@ const About = () => {
             course and the amount of money they need.On the other side, the
             aspiring sponsor can view the students application and decide to
             offer the assistance.The platform therefore provide a way by which
-            the student can communicate with assiprant sponsor through text
+            the student can communicate with aspiring sponsor through text
             messages which enables them to atleast get the necessary information
             about each other that enhances the aiding.
           </p>

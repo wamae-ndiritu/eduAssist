@@ -10,7 +10,7 @@ const RequestCard = ({ info }) => {
             Application No: #{info.id}
           </h1>
           <span
-            className={`ml-2 bg-slate-100 rounded-full px-2 py-1 ${
+            className={`ml-2 bg-slate-100 rounded-full px-2 py-1 capitalize ${
               info.status === "pending"
                 ? "text-blue-300"
                 : info.status === "approved"

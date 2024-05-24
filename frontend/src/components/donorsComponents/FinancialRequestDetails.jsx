@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getFinancialRequestDetails, updateFinancialRequestStatus } from "../../redux/actions/requestAction";
@@ -14,7 +14,9 @@ const FinancialRequestDetails = () => {
   );
 
   const { userInfo } = useSelector((state) => state.user);
-
+  const [showDeleteInput, setShowDeleteInput] = useState(false);
+  const [inputErr, setInputErr] = useState(false);
+  const [message, setMessage] = useState('');
 
   const calculateAge = (birthday) => {
     const dob = new Date(birthday);
@@ -36,12 +38,26 @@ const FinancialRequestDetails = () => {
     dispatch(updateFinancialRequestStatus(requestId, {action: 'approve'}))
   }
 
+  const handleReject = (e) => {
+    e.preventDefault();
+    setInputErr(false);
+    if (message === ''){
+      setInputErr(true);
+      return;
+    }
+    dispatch(
+      updateFinancialRequestStatus(requestId, { action: "reject", message })
+    );
+  }
+
   useEffect(() => {
     dispatch(getFinancialRequestDetails(requestId));
   }, [dispatch, requestId]);
 
   useEffect(() => {
     if (updated) {
+      setMessage('');
+      setShowDeleteInput(false);
       const interval = setInterval(() => {
         dispatch(resetReqState())
       }, 5000);
@@ -84,12 +100,30 @@ const FinancialRequestDetails = () => {
             >
               Approve
             </button>
-            <button className='bg-red-300 px-2 py-1 text-white rounded'>
+            <button className='bg-red-300 px-2 py-1 text-white rounded' onClick={() => setShowDeleteInput(!showDeleteInput)}>
               Reject
             </button>
           </div>
         )}
       </div>
+      {showDeleteInput && (
+        <form className='w-full flex flex-col text-gray-600 my-2' onSubmit={handleReject}>
+          <label htmlFor='message'>
+            Reason why the application is rejected.
+          </label>
+          <input
+            type='text'
+            name='message'
+            id='message'
+            className='border focus:outline-green-500 text-gray-600 p-2 rounded my-1'
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          />
+          <button className='bg-blue-300 text-white py-1 rounded'>
+            Submit
+          </button>
+        </form>
+      )}
       <div className='flex items-end gap-5'>
         <img
           src={
@@ -276,6 +310,21 @@ const FinancialRequestDetails = () => {
             className='h-full w-full object-contain'
           />
           <h6 className='text-gray-600'>Fee Statement</h6>
+        </div>
+        <div className='col-span-1 h-96 border flex flex-col gap-3 items-center justify-center'>
+          <img
+            src={financialRequest.proof_of_background}
+            alt='Death Certificate/Background Photo'
+            className='h-full w-full object-contain'
+          />
+          <a
+            href={financialRequest.proof_of_background}
+            target='_blank'
+            rel='noopener noreferrer'
+            className='underline text-blue-500'
+          >
+            <h6 className=''>Death Certificate/Background Photo</h6>
+          </a>
         </div>
       </section>
     </section>

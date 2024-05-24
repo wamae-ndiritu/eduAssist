@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Beneficiary, CustomUser, Donor, FinancialAidRequest
+from .models import Beneficiary, CustomUser, Donor, FinancialAidRequest, Notification
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
@@ -39,3 +39,9 @@ class FinancialAidRequestSerializer(serializers.ModelSerializer):
         model = FinancialAidRequest
         fields = ['id', 'reason_for_aid', 'is_disabled', 'disability_description',
                   'is_parent_disabled', 'parent_disability_description', 'funding_source', 'created_at', 'beneficiary', 'fee_structure', 'fee_statement', 'transcript', 'scholarships', 'bursary', 'well_wishers', 'others', 'is_orphan', 'proof_of_background', 'status']
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = ['id', 'message', 'created_at', 'is_read']

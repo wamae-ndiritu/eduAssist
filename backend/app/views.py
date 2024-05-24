@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import CustomUser, Beneficiary, Donor, FinancialAidRequest, Notification
-from .serializers import BeneficiarySerializer, CustomUserSerializer, DonorSerializers, BeneficiaryReadSerializer, FinancialAidRequestSerializer
+from .serializers import BeneficiarySerializer, CustomUserSerializer, DonorSerializers, BeneficiaryReadSerializer, FinancialAidRequestSerializer, NotificationSerializer
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
@@ -397,3 +397,12 @@ def update_financial_aid_request_status(request, request_id):
         return JsonResponse({'message': 'FinancialAidRequest not found'}, status=404)
     except Exception as e:
         return JsonResponse({'message': str(e)}, status=500)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_user_notifications(request):
+    user = request.user
+    notifications = Notification.objects.filter(
+        user=user).order_by('-created_at')
+    serializer = NotificationSerializer(notifications, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)

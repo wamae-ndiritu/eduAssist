@@ -52,7 +52,7 @@ const FinancialRequestDetails = () => {
 
   useEffect(() => {
     dispatch(getFinancialRequestDetails(requestId));
-  }, [dispatch, requestId]);
+  }, [dispatch, requestId, updated]);
 
   useEffect(() => {
     if (updated) {
@@ -75,7 +75,7 @@ const FinancialRequestDetails = () => {
         <div className='flex items-center gap-2'>
           <p className='text-gray-600'>Status</p>
           <span
-            className={`bg-slate-100 rounded-full px-4 py-1 ${
+            className={`bg-slate-100 rounded-full capitalize px-4 py-1 ${
               financialRequest.status === "pending"
                 ? "text-blue-300"
                 : financialRequest.status === "approved"
@@ -100,14 +100,20 @@ const FinancialRequestDetails = () => {
             >
               Approve
             </button>
-            <button className='bg-red-300 px-2 py-1 text-white rounded' onClick={() => setShowDeleteInput(!showDeleteInput)}>
+            <button
+              className='bg-red-300 px-2 py-1 text-white rounded'
+              onClick={() => setShowDeleteInput(!showDeleteInput)}
+            >
               Reject
             </button>
           </div>
         )}
       </div>
       {showDeleteInput && (
-        <form className='w-full flex flex-col text-gray-600 my-2' onSubmit={handleReject}>
+        <form
+          className='w-full flex flex-col text-gray-600 my-2'
+          onSubmit={handleReject}
+        >
           <label htmlFor='message'>
             Reason why the application is rejected.
           </label>
@@ -115,7 +121,11 @@ const FinancialRequestDetails = () => {
             type='text'
             name='message'
             id='message'
-            className='border focus:outline-green-500 text-gray-600 p-2 rounded my-1'
+            className={`border ${
+              inputErr
+                ? "border-red-500 focus:outline-red-500"
+                : "border-gray-300 focus:outline-green-500"
+            } text-gray-600 p-2 rounded my-1`}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           />

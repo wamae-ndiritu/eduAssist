@@ -7,6 +7,7 @@ const initialState = {
   financialRequest: {},
   success: false,
   updated: false,
+  deleted: false,
 };
 
 export const requestSlice = createSlice({
@@ -16,13 +17,15 @@ export const requestSlice = createSlice({
     resetReqState: (state) => {
       state.error = null;
       state.loading = false;
-      state.success =false;
+      state.success = false;
+      state.deleted = false;
     },
     requestStart: (state) => {
       state.loading = true;
       state.error = null;
       state.success = false;
       state.updated = false;
+      state.deleted = false;
     },
     requestFail: (state, action) => {
       state.loading = false;
@@ -42,6 +45,10 @@ export const requestSlice = createSlice({
     updateFinancialRequestSuccess: (state) => {
       state.loading = false;
       state.updated = true;
+    },
+    deleteFinancialRequestSuccess: (state) => {
+      state.loading = false;
+      state.deleted = true;
     }
   },
 });
@@ -53,7 +60,8 @@ export const {
     createFinancialRequestSuccess,
     getFinancialRequestSuccess,
     getFinancialRequestDetailsSuccess,
-    updateFinancialRequestSuccess
+    updateFinancialRequestSuccess,
+    deleteFinancialRequestSuccess
 } = requestSlice.actions;
 
 export default requestSlice.reducer;

@@ -1,7 +1,14 @@
 import { Link } from "react-router-dom";
 import moment from "moment";
+import { useDispatch } from "react-redux";
+import { deleteFinancialRequest } from "../../redux/actions/requestAction";
 
 const RequestCard = ({ info }) => {
+  const dispatch = useDispatch();
+
+  const handleDelete = (id) => {
+    dispatch(deleteFinancialRequest(id));
+  }
   return (
     <div className='w-full bg-white border rounded p-4 relative'>
       <div className='flex gap-1 absolute top-1 right-1'>
@@ -30,7 +37,7 @@ const RequestCard = ({ info }) => {
         >
           View
         </Link>
-        <button className='bg-red-300 rounded px-2 py-1 text-white'>
+        <button className='bg-red-300 rounded px-2 py-1 text-white' onClick={() => handleDelete(info.id)}>
           Delete
         </button>
       </div>

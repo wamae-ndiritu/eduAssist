@@ -11,11 +11,11 @@ const FinancialAidRequests = () => {
 
    const {userInfo} = useSelector((state) => state.user);
 
-   const { financialRequests } = useSelector((state) => state.request);
+   const { financialRequests, deleted } = useSelector((state) => state.request);
 
    useEffect(() => {
      dispatch(getFinancialRequests());
-   }, [dispatch]);
+   }, [dispatch, deleted]);
   return (
     <div>
       <section

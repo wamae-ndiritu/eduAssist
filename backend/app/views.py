@@ -406,3 +406,29 @@ def list_user_notifications(request):
         user=user).order_by('-created_at')
     serializer = NotificationSerializer(notifications, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_beneficiaries(request):
+    users = CustomUser.objects.filter(user_type='beneficiary')
+    usersList = []
+    for user in users:
+        serializer = CustomUserSerializer(user)
+        beneficiary = Beneficiary.objects.get(user_id=user.id)
+        usersList.append({**serializer.data, "institution": beneficiary.institution_name})
+    return Response(usersList, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_donors(request):
+    users = CustomUser.objects.filter(user_type='donor')
+    usersList = []
+    for user in users:
+        serializer = CustomUserSerializer(user)
+        donor = Donor.objects.get(user_id=user.id)
+        donor_serializer = DonorSerializers(donor)
+        usersList.append(
+            {**serializer.data, **donor_serializer.data})
+    return Response(usersList, status=status.HTTP_200_OK)

@@ -92,9 +92,16 @@ class Beneficiary(models.Model):
 
 
 class Donor(models.Model):
+    statusChoices = [
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+        ('pending', 'Pending')
+    ]
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     organization = models.CharField(max_length=150, null=True)
     national_id = models.CharField(max_length=70, null=True)
+    status = models.CharField(
+        max_length=100, choices=statusChoices, default='pending')
 
 
 class FinancialAidRequest(models.Model):

@@ -9,6 +9,8 @@ import { getFinancialRequests } from "../../redux/actions/requestAction";
 const FinancialAidRequests = () => {
    const dispatch = useDispatch();
 
+   const {userInfo} = useSelector((state) => state.user);
+
    const { financialRequests } = useSelector((state) => state.request);
 
    useEffect(() => {
@@ -16,7 +18,13 @@ const FinancialAidRequests = () => {
    }, [dispatch]);
   return (
     <div>
-      <section className='w-full grid grid-cols-1 md:grid-cols-4 gap-3'>
+      <section
+        className={`w-full grid grid-cols-1 ${
+          userInfo?.user?.user_type === "admin"
+            ? "md:grid-cols-3"
+            : "md:grid-cols-4"
+        } gap-3`}
+      >
         <div className='col-span-1 shadow bg-green-600 text-white rounded p-4 flex gap-3'>
           <span className=''>
             <GroupIcon style={{ fontSize: "50px" }} />
@@ -35,15 +43,17 @@ const FinancialAidRequests = () => {
             <p>30</p>
           </span>
         </div>
-        <div className='col-span-1 shadow bg-green-600 text-white rounded p-4 flex gap-3'>
-          <span className=''>
-            <RateReviewIcon style={{ fontSize: "50px" }} />
-          </span>
-          <span>
-            <h4>My Reviews</h4>
-            <p>10</p>
-          </span>
-        </div>
+        {userInfo?.user?.user_type === "donor" && (
+          <div className='col-span-1 shadow bg-green-600 text-white rounded p-4 flex gap-3'>
+            <span className=''>
+              <RateReviewIcon style={{ fontSize: "50px" }} />
+            </span>
+            <span>
+              <h4>My Reviews</h4>
+              <p>10</p>
+            </span>
+          </div>
+        )}
         <div className='col-span-1 shadow bg-green-500 text-white rounded p-4 flex gap-3'>
           <span className=''>
             <RecommendIcon style={{ fontSize: "50px" }} />
@@ -78,12 +88,10 @@ const FinancialAidRequests = () => {
           </button>
         </div>
       </section>
-      <section className="my-5 flex flex-wrap gap-3">
-        {
-          financialRequests.map((request) => {
-            return <RequestCard info={request }/>;
-          })
-        }
+      <section className='my-5 flex flex-wrap gap-3'>
+        {financialRequests.map((request) => {
+          return <RequestCard info={request} />;
+        })}
       </section>
     </div>
   );

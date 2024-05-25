@@ -264,6 +264,50 @@ const FinancialRequestDetails = () => {
 
             <td className='border border-gray-300 px-2 py-1'>Not required</td>
             <td className='border border-gray-300 px-2 py-1'>
+              <div className='flex items-center gap-1'>
+                <input
+                  type='checkbox'
+                  name=''
+                  id='scholarship'
+                  className='h-4 w-4'
+                  checked={financialRequest.scholarships}
+                  readOnly
+                />
+                <label htmlFor='scholarship'>Scholarships</label>
+              </div>
+              <div className='flex items-center gap-1'>
+                <input
+                  type='checkbox'
+                  name=''
+                  id='bursary'
+                  className='h-4 w-4'
+                  checked={financialRequest.bursary}
+                  readOnly
+                />
+                <label htmlFor='bursary'>Bursaries</label>
+              </div>
+              <div className='flex items-center gap-1'>
+                <input
+                  type='checkbox'
+                  name=''
+                  id='well_wishers'
+                  className='h-4 w-4'
+                  checked={financialRequest.well_wishers}
+                  readOnly
+                />
+                <label htmlFor='well_wishers'>Well Wishers</label>
+              </div>
+              <div className='flex items-center gap-1'>
+                <input
+                  type='checkbox'
+                  name=''
+                  id='others'
+                  className='h-4 w-4'
+                  checked={financialRequest.others}
+                  readOnly
+                />
+                <label htmlFor='others'>Others</label>
+              </div>
               {financialRequest.funding_source}
             </td>
           </tr>
@@ -279,7 +323,14 @@ const FinancialRequestDetails = () => {
             alt='National ID'
             className='h-full w-full object-contain'
           />
-          <h6 className='text-gray-600'>National ID/Birth Certificate</h6>
+          <a
+            href={financialRequest.national_id_url}
+            target='_blank'
+            rel='noopener noreferrer'
+            className='underline text-blue-500'
+          >
+            <h6 className=''>National ID/Birth Certificate</h6>
+          </a>
         </div>
         <div className='col-span-1 h-96 border flex flex-col gap-3 items-center justify-center'>
           <img
@@ -287,7 +338,14 @@ const FinancialRequestDetails = () => {
             alt='KCPE Cert.'
             className='h-full w-full object-contain'
           />
-          <h6 className='text-gray-600'>KCPE Certificate</h6>
+          <a
+            href={financialRequest.kcpe_certificate_url}
+            target='_blank'
+            rel='noopener noreferrer'
+            className='underline text-blue-500'
+          >
+            <h6 className=''>KCPE Certificate</h6>
+          </a>
         </div>
         <div className='col-span-1 h-96 border flex flex-col gap-3 items-center justify-center'>
           <img
@@ -295,7 +353,14 @@ const FinancialRequestDetails = () => {
             alt='KCSE Cert.'
             className='h-full w-full object-contain'
           />
-          <h6 className='text-gray-600'>KCSE Certificate</h6>
+          <a
+            href={financialRequest.kcse_certificate_url}
+            target='_blank'
+            rel='noopener noreferrer'
+            className='underline text-blue-500'
+          >
+            <h6 className=''>KCSE Certificate</h6>
+          </a>
         </div>
         <div className='col-span-1 h-96 border flex flex-col gap-3 items-center justify-center'>
           <img
@@ -303,7 +368,14 @@ const FinancialRequestDetails = () => {
             alt='Transcript'
             className='h-full w-full object-contain'
           />
-          <h6 className='text-gray-600'>Fee Structure</h6>
+          <a
+            href={financialRequest.transcript}
+            target='_blank'
+            rel='noopener noreferrer'
+            className='underline text-blue-500'
+          >
+            <h6 className=''>Transcript</h6>
+          </a>
         </div>
         <div className='col-span-1 h-96 border flex flex-col gap-3 items-center justify-center'>
           <img
@@ -311,7 +383,14 @@ const FinancialRequestDetails = () => {
             alt='Fees Structure'
             className='h-full w-full object-contain'
           />
-          <h6 className='text-gray-600'>Fee Structure</h6>
+          <a
+            href={financialRequest.fee_structure}
+            target='_blank'
+            rel='noopener noreferrer'
+            className='underline text-blue-500'
+          >
+            <h6 className=''>Fee Structure</h6>
+          </a>
         </div>
         <div className='col-span-1 h-96 border flex flex-col gap-3 items-center justify-center'>
           <img
@@ -319,7 +398,14 @@ const FinancialRequestDetails = () => {
             alt='Fees Statement'
             className='h-full w-full object-contain'
           />
-          <h6 className='text-gray-600'>Fee Statement</h6>
+          <a
+            href={financialRequest.fee_statement}
+            target='_blank'
+            rel='noopener noreferrer'
+            className='underline text-blue-500'
+          >
+            <h6 className=''>Fee Statement</h6>
+          </a>
         </div>
         <div className='col-span-1 h-96 border flex flex-col gap-3 items-center justify-center'>
           <img

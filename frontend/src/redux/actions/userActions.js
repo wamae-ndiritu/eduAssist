@@ -7,6 +7,8 @@ import {
   updateProfileSuccess,
   usersActionFail,
   getProfileInfoSuccess,
+  getDonorsSuccess,
+  getStudentsSuccess,
 } from "../slices/userSlices";
 import axios from "redaxios";
 import { BASE_URL } from "../../URL";
@@ -167,3 +169,84 @@ export const updateProfile =
       }
     }
   };
+
+
+// Get donors
+export const listDonors = () => async (dispatch, getState) => {
+  try {
+    dispatch(usersActionStart());
+
+    const {
+      user: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo?.token?.access}`,
+        "Content-Type": "application/json",
+      },
+    };
+
+    const { data } = await axios.get(
+      `${BASE_URL}/users/donors/`,
+      config
+    );
+    dispatch(getDonorsSuccess(data));
+  } catch (err) {
+    const errMsg =
+      err?.data && err?.data?.length
+        ? err.data[0]?.message
+        : err?.data
+        ? err.data?.message || err.data?.detail
+        : err.statusText;
+    if (
+      errMsg === "Authentication credentials were not provided." ||
+      errMsg === "Given token not valid for any token type"
+    ) {
+      dispatch(logout());
+      dispatch(usersActionFail("Your session has expired! Login again..."));
+    } else {
+      dispatch(usersActionFail(errMsg));
+    }
+  }
+};
+
+// Get All Beneficiaries
+export const listBeneficiaries = () => async (dispatch, getState) => {
+  try {
+    dispatch(usersActionStart());
+
+    const {
+      user: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo?.token?.access}`,
+        "Content-Type": "application/json",
+      },
+    };
+
+    const { data } = await axios.get(
+      `${BASE_URL}/users/beneficiaries/`,
+      config
+    );
+    dispatch(getStudentsSuccess(data));
+  } catch (err) {
+    const errMsg =
+      err?.data && err?.data?.length
+        ? err.data[0]?.message
+        : err?.data
+        ? err.data?.message || err.data?.detail
+        : err.statusText;
+    if (
+      errMsg === "Authentication credentials were not provided." ||
+      errMsg === "Given token not valid for any token type"
+    ) {
+      dispatch(logout());
+      dispatch(usersActionFail("Your session has expired! Login again..."));
+    } else {
+      dispatch(usersActionFail(errMsg));
+    }
+  }
+};

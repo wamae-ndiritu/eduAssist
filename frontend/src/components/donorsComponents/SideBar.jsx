@@ -3,10 +3,15 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { useDispatch } from "react-redux";
+import RecommendIcon from "@mui/icons-material/Recommend"
+import GroupIcon from "@mui/icons-material/Group";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/actions/userActions";
+import Recommend from "@mui/icons-material/Recommend";
 const SideBar = () => {
   const dispatch = useDispatch();
+
+  const {userInfo} = useSelector((state) => state.user);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -32,20 +37,52 @@ const SideBar = () => {
               <h6>Dashboard</h6>
             </NavLink>
           </li>
-          <li className=''>
-            <NavLink
-              to='/dashboard/reviews'
-              className={({ isActive }) =>
-                isActive
-                  ? "flex gap-3 p-2 bg-green-600 text-white"
-                  : "flex gap-3 p-2 hover:bg-green-600 hover:text-white"
-              }
-            >
-              <RequestQuoteIcon />
-              <h6>My Reviews</h6>
-            </NavLink>
-          </li>
-          <li className=''>
+          {userInfo?.user?.user_type === "donor" && (
+            <li className='my-1'>
+              <NavLink
+                to='/dashboard/reviews'
+                className={({ isActive }) =>
+                  isActive
+                    ? "flex gap-3 p-2 bg-green-600 text-white"
+                    : "flex gap-3 p-2 hover:bg-green-600 hover:text-white"
+                }
+              >
+                <RequestQuoteIcon />
+                <h6>My Reviews</h6>
+              </NavLink>
+            </li>
+          )}
+          {userInfo?.user?.user_type === "admin" && (
+            <li className='my-1'>
+              <NavLink
+                to='/dashboard/donors'
+                className={({ isActive }) =>
+                  isActive
+                    ? "flex gap-3 p-2 bg-green-600 text-white"
+                    : "flex gap-3 p-2 hover:bg-green-600 hover:text-white"
+                }
+              >
+                <RecommendIcon />
+                <h6>Donors</h6>
+              </NavLink>
+            </li>
+          )}
+          {userInfo?.user?.user_type === "admin" && (
+            <li className='my-1'>
+              <NavLink
+                to='/dashboard/students'
+                className={({ isActive }) =>
+                  isActive
+                    ? "flex gap-3 p-2 bg-green-600 text-white"
+                    : "flex gap-3 p-2 hover:bg-green-600 hover:text-white"
+                }
+              >
+                <GroupIcon />
+                <h6>Students</h6>
+              </NavLink>
+            </li>
+          )}
+          <li className='my-1'>
             <NavLink
               to='/dashboard/profile'
               className={({ isActive }) =>

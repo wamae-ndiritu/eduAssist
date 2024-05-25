@@ -21,6 +21,8 @@ import DashboardLayout from "./components/donorsComponents/DashboardLayout";
 import FinancialRequestDetails from "./components/donorsComponents/FinancialRequestDetails";
 import UserReviews from "./components/donorsComponents/UserReviews";
 import DonorProfile from "./components/donorsComponents/DonorProfile";
+import DonorsPage from "./components/donorsComponents/DonorsPage";
+import StudentsPage from "./components/donorsComponents/StudentsPage";
 
 const ProtectedLayout = () => {
   const { userInfo } = useSelector((state) => state.user);
@@ -44,16 +46,15 @@ function App() {
             path='/profile/applications/new'
             element={<NewApplicationPage />}
           />
-          <Route
-            path='/profile/applications'
-            element={<ApplicationsPage />}
-          />
+          <Route path='/profile/applications' element={<ApplicationsPage />} />
           <Route path='/profile/messages/:id' element={<MessagesPage />} />
         </Route>
         <Route element={<DashboardLayout />}>
           <Route path='/dashboard' element={<FinancialAidRequests />} />
           <Route path='/dashboard/reviews' element={<UserReviews />} />
           <Route path='/dashboard/profile' element={<DonorProfile />} />
+          <Route path='/dashboard/donors' element={<DonorsPage />} />
+          <Route path='/dashboard/students' element={<StudentsPage />} />
           <Route
             path='/financial-requests/:id'
             element={<FinancialRequestDetails />}

@@ -134,7 +134,12 @@ class FinancialAidRequest(models.Model):
 
 
 class Notification(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        'CustomUser', on_delete=models.CASCADE, related_name='notifications')
+    sender = models.ForeignKey('CustomUser', on_delete=models.CASCADE,
+                               null=True, default=None, related_name='sent_notifications')
+    title = models.CharField(max_length=255, null=True, blank=True)
+    title = models.CharField(max_length=255, null=True, blank=True)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)

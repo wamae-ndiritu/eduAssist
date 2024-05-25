@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 import moment from "moment";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { deleteFinancialRequest } from "../../redux/actions/requestAction";
 
 const RequestCard = ({ info }) => {
   const dispatch = useDispatch();
+
+  const {userInfo} = useSelector((state) => state.user);
 
   const handleDelete = (id) => {
     dispatch(deleteFinancialRequest(id));
@@ -37,9 +39,14 @@ const RequestCard = ({ info }) => {
         >
           View
         </Link>
-        <button className='bg-red-300 rounded px-2 py-1 text-white' onClick={() => handleDelete(info.id)}>
-          Delete
-        </button>
+        {userInfo?.user?.user_type === "admin" && (
+          <button
+            className='bg-red-300 rounded px-2 py-1 text-white'
+            onClick={() => handleDelete(info.id)}
+          >
+            Delete
+          </button>
+        )}
       </div>
       <div className='flex gap-2 justify-start items-center'>
         <img

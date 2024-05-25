@@ -415,6 +415,7 @@ def get_beneficiary_requests(request, beneficiary_id):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def update_financial_aid_request_status(request, request_id):
+    sender = request.user
     try:
         financial_aid_request = get_object_or_404(
             FinancialAidRequest, pk=request_id)
@@ -437,7 +438,7 @@ def update_financial_aid_request_status(request, request_id):
         user = financial_aid_request.beneficiary.user
 
         # Create a notification
-        Notification.objects.create(user=user, message=message)
+        Notification.objects.create(user=user, title='Financial Aid Request Update', message=message, sender=sender)
 
         # Send an email notification
         send_mail(

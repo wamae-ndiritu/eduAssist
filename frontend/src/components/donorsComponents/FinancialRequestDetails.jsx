@@ -228,6 +228,18 @@ const FinancialRequestDetails = () => {
         <tbody>
           <tr>
             <td className='border border-gray-300 px-2 py-1'>
+              Are you an orphan?
+            </td>
+
+            <td className='border border-gray-300 px-2 py-1'>
+              {financialRequest.is_orphan ? "Yes" : "No"}
+            </td>
+            <td className='border border-gray-300 px-2 py-1'>
+              No Description
+            </td>
+          </tr>
+          <tr>
+            <td className='border border-gray-300 px-2 py-1'>
               Do you suffer from any physical impairment (disability)? If yes,
               please provide details.
             </td>

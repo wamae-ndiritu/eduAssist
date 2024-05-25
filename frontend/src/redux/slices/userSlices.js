@@ -21,6 +21,7 @@ const initialState = {
   donorsList: [],
   deleted: false,
   isDonor: false,
+  notifications: [],
 };
 
 export const userSlice = createSlice({
@@ -91,6 +92,10 @@ export const userSlice = createSlice({
     createDonorSuccess: (state) => {
       state.loading = false;
       state.isDonor = true;
+    },
+    getUserNotificationSuccess: (state, action) => {
+      state.loading = false;
+      state.notifications = action.payload;
     }
   },
 });
@@ -109,7 +114,8 @@ export const {
   getStudentsSuccess,
   updateDonorStatusSuccess,
   deleteUserSuccess,
-  createDonorSuccess
+  createDonorSuccess,
+  getUserNotificationSuccess
 } = userSlice.actions;
 
 export default userSlice.reducer;

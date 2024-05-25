@@ -6,7 +6,7 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import CommentIcon from "@mui/icons-material/Comment";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { getProfileInfo, updateProfile } from "../redux/actions/userActions";
 import { validateObject } from "../helpers";
 import Message from "./utils/Message";
@@ -20,7 +20,7 @@ import {
 } from "firebase/storage";
 import app from "../firebase";
 
-export const ProfileHead = ({profile}) => {
+export const ProfileHead = ({ profile }) => {
   const bucket_url = import.meta.env.VITE_APP_BUCKET_URL;
 
   const dispatch = useDispatch();
@@ -62,43 +62,59 @@ export const ProfileHead = ({profile}) => {
   }, [profile]);
 
   return (
-    <section className='w-full grid grid-cols-1 md:grid-cols-7 gap-3'>
-      <div className='col-span-1 md:col-span-2 border rounded p-4'>
-        <ul>
-          <li className='mb-2'>
-            <Link
-              to='/profile'
-              className='shadow-sm flex gap-3 items-center bg-slate-100 px-4 py-2 rounded text-gray-600 hover:bg-emerald-300 hover:text-white'
-            >
-              <ManageAccountsIcon /> <h6>Account</h6>
-            </Link>
-          </li>
-          <li className='mb-2'>
-            <Link
-              to='/profile/applications/new'
-              className='shadow-sm flex gap-3 items-center bg-slate-100 px-4 py-2 rounded text-gray-600 hover:bg-emerald-300 hover:text-white'
-            >
-              <LibraryAddIcon /> <h6>New Application</h6>
-            </Link>
-          </li>
-          <li className='mb-2'>
-            <Link
-              to='/profile/applications'
-              className='shadow-sm flex gap-3 items-center bg-slate-100 px-4 py-2 rounded text-gray-600 hover:bg-emerald-300 hover:text-white'
-            >
-              <DescriptionIcon /> <h6>My Applications</h6>
-            </Link>
-          </li>
-          <li className='mb-2'>
-            <Link
-              to='/profile/messages/1'
-              className='shadow-sm flex gap-3 items-center bg-slate-100 px-4 py-2 rounded text-gray-600 hover:bg-emerald-300 hover:text-white'
-            >
-              <CommentIcon /> <h6>Messages</h6>
-            </Link>
-          </li>
-        </ul>
-      </div>
+    <section className='w-full flex flex-col'>
+      <ul className='flex gap-5'>
+        <li className='mb-2'>
+          <NavLink
+            to='/profile'
+            className={({ isActive }) =>
+              isActive
+                ? "shadow-sm flex gap-3 items-center px-4 py-2 rounded text-gray-600 bg-emerald-300 text-white"
+                : "shadow-sm flex gap-3 items-center bg-slate-100 px-4 py-2 rounded text-gray-600 hover:bg-emerald-300 hover:text-white"
+            }
+            end
+          >
+            <ManageAccountsIcon /> <h6>Account</h6>
+          </NavLink>
+        </li>
+        <li className='mb-2'>
+          <NavLink
+            to='/profile/applications/new'
+            className={({ isActive }) =>
+              isActive
+                ? "shadow-sm flex gap-3 items-center px-4 py-2 rounded text-gray-600 bg-emerald-300 text-white"
+                : "shadow-sm flex gap-3 items-center bg-slate-100 px-4 py-2 rounded text-gray-600 hover:bg-emerald-300 hover:text-white"
+            }
+          >
+            <LibraryAddIcon /> <h6>New Application</h6>
+          </NavLink>
+        </li>
+        <li className='mb-2'>
+          <NavLink
+            to='/profile/applications'
+            className={({ isActive }) =>
+              isActive
+                ? "shadow-sm flex gap-3 items-center px-4 py-2 rounded text-gray-600 bg-emerald-300 text-white"
+                : "shadow-sm flex gap-3 items-center bg-slate-100 px-4 py-2 rounded text-gray-600 hover:bg-emerald-300 hover:text-white"
+            }
+            end
+          >
+            <DescriptionIcon /> <h6>My Applications</h6>
+          </NavLink>
+        </li>
+        <li className='mb-2'>
+          <NavLink
+            to='/profile/messages/1'
+            className={({ isActive }) =>
+              isActive
+                ? "shadow-sm flex gap-3 items-center px-4 py-2 rounded text-gray-600 bg-emerald-300 text-white"
+                : "shadow-sm flex gap-3 items-center bg-slate-100 px-4 py-2 rounded text-gray-600 hover:bg-emerald-300 hover:text-white"
+            }
+          >
+            <CommentIcon /> <h6>Notifications</h6>
+          </NavLink>
+        </li>
+      </ul>
       <div className='col-span-1 md:col-span-5 grid grid-cols-1 md:grid-cols-3 gap-3 border p-4 rounded'>
         <div className='col-span-1 flex items-center justify-center'>
           <div className='relative w-32 h-32 rounded-full border border-emerald-300'>
@@ -204,7 +220,6 @@ const Profile = () => {
     }
   }, [dispatch, error]);
 
-
   useEffect(() => {
     if (profileInfo.personal_info_updated) {
       const newObj = {
@@ -235,12 +250,12 @@ const Profile = () => {
 
   return (
     <div className='w-full bg-white my-12 flex flex-cols items-center justify-center'>
-      <section className='w-full md:w-4/5 px-4 md:px-12 py-4 border flex flex-col items-center'>
-        <h1 className='text-3xl font-semibold my-5'>Update Profile Details</h1>
+      <section className='w-full md:w-4/5 px-4 md:px-12 py-4 border flex flex-col'>
+        <h1 className='text-2xl font-semibold my-1'>Update Profile Details</h1>
         <p className='text-gray-600 py-3'>
-          Your information is vital and required step in the process of
-          seeking financial aid. Please update any blank section, for you to
-          start creating new applications.
+          Your information is vital and required step in the process of seeking
+          financial aid. Please update any blank section, for you to start
+          creating new applications.
         </p>
         <ProfileHead profile={profileInfo} />
         <ProfileUpdateProgress

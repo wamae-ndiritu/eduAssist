@@ -11,6 +11,7 @@ import {
   getStudentsSuccess,
   deleteUserSuccess,
   updateDonorStatusSuccess,
+  createDonorSuccess,
 } from "../slices/userSlices";
 import axios from "redaxios";
 import { BASE_URL } from "../../URL";
@@ -22,8 +23,11 @@ export const register = (userInfo) => async (dispatch) => {
 
     const { data } = await axios.post(`${BASE_URL}/users/create/`, userInfo);
 
-    dispatch(userLoginSuccess(data));
-    localStorage.setItem("userInfo", JSON.stringify(data));
+    if (data.user.user_type !== 'donor'){
+      dispatch(userLoginSuccess(data));
+      localStorage.setItem("userInfo", JSON.stringify(data));
+    }
+    dispatch(createDonorSuccess())
   } catch (err) {
     const errMsg = err?.data
       ? err.data.message

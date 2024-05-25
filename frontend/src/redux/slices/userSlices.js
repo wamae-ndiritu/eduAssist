@@ -20,6 +20,7 @@ const initialState = {
   studentsList: [],
   donorsList: [],
   deleted: false,
+  isDonor: false,
 };
 
 export const userSlice = createSlice({
@@ -49,6 +50,7 @@ export const userSlice = createSlice({
       state.profileUpdates.documents = false;
       state.profileUpdates.profile_pic = false;
       state.donorStatusUpdated = false;
+      state.isDonor = false;
     },
     usersActionStart: (state) => {
       state.loading = true;
@@ -56,6 +58,7 @@ export const userSlice = createSlice({
       state.deleted = false;
       state.profileUpdated = false;
       state.donorStatusUpdated = false;
+      state.isDonor = false;
     },
     usersActionFail: (state, action) => {
       state.loading = false;
@@ -84,6 +87,10 @@ export const userSlice = createSlice({
     updateDonorStatusSuccess: (state) => {
       state.loading = false;
       state.donorStatusUpdated = true;
+    },
+    createDonorSuccess: (state) => {
+      state.loading = false;
+      state.isDonor = true;
     }
   },
 });
@@ -101,7 +108,8 @@ export const {
   getDonorsSuccess,
   getStudentsSuccess,
   updateDonorStatusSuccess,
-  deleteUserSuccess
+  deleteUserSuccess,
+  createDonorSuccess
 } = userSlice.actions;
 
 export default userSlice.reducer;

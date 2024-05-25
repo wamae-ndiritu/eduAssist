@@ -106,7 +106,7 @@ def login(request):
     if not password:
         return Response({"message": "Password required!"}, status=status.HTTP_400_BAD_REQUEST)
     try:
-        user = CustomUser.objects.get(email=email)
+        user = CustomUser.objects.get(email=email, user_type=role)
 
         if not user.check_password(password):
             return Response({"message": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
@@ -116,6 +116,8 @@ def login(request):
             other_serializer = BeneficiaryReadSerializer(beneficiary)
         if user.user_type == 'donor':
             donor = Donor.objects.get(user_id=user.id)
+            if donor.status != 'approved':
+                return Response({"message": "Your account has not yet been approved! Once your account has been approved, you'll get a notification on your email. Thankyou for your patience!s"}, status=status.HTTP_403_FORBIDDEN)
             other_serializer = DonorSerializers(donor)
 
         serializer = CustomUserSerializer(user)
@@ -148,7 +150,7 @@ def login(request):
         return Response(res_data, status=status.HTTP_200_OK)
 
     except CustomUser.DoesNotExist:
-        return Response({"message": "User not found!"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"message": "User with the email and role not found!"}, status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['DELETE'])

@@ -10,10 +10,16 @@ import RedirectingDots from "../components/utils/RedirectingDots";
 const RegisterPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error, userInfo: user } = useSelector((state) => state.user);
+  const {
+    loading,
+    error,
+    userInfo: user,
+    isDonor,
+  } = useSelector((state) => state.user);
   const [showOptions, setShowOptions] = useState(true);
   const [showDonorForm, setShowDonorForm] = useState(false);
   const [showBeneficiaryForm, setShowBeneficiaryForm] = useState(false);
+  const [approvalMessage, setApprovalMessage] = useState(null);
   const [userInfo, setUserInfo] = useState({
     full_name: "",
     email: "",
@@ -122,10 +128,8 @@ const RegisterPage = () => {
       setRedirecting(true);
       const interval = setInterval(() => {
         setRedirecting(false);
-        if (user?.user?.user_type === 'beneficiary'){
+        if (user?.user?.user_type === "beneficiary") {
           navigate("/profile");
-        } else if (user?.user?.user_type === 'donor'){
-          navigate("/dashboard");
         }
       }, 5000);
 
@@ -152,7 +156,23 @@ const RegisterPage = () => {
         user_type: "donor",
       });
     }
-  }, [navigate, user, error]);
+    if (isDonor) {
+      setDonorForm({
+        full_name: "",
+        email: "",
+        contact: "",
+        organization: "",
+        national_id: "",
+        username: "",
+        password: "",
+        confirmPassword: "",
+        user_type: "donor",
+      });
+      setApprovalMessage(
+        "Your account has been created and is pending approval. You'll receive a notification on your email once it has been approved."
+      );
+    }
+  }, [navigate, user, error, isDonor]);
 
   useEffect(() => {
     if (error) {
@@ -232,6 +252,14 @@ const RegisterPage = () => {
                 Your account has been created successfully! Please wait as
                 you&apos;re redirected{" "}
                 <RedirectingDots redirecting={redirecting} />
+              </Message>
+            )}
+            {approvalMessage && (
+              <Message
+                variant='success'
+                onClose={() => setApprovalMessage(null)}
+              >
+                {approvalMessage}
               </Message>
             )}
             <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>

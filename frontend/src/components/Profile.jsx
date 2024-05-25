@@ -86,7 +86,7 @@ export const ProfileHead = ({ profile }) => {
                 : "shadow-sm flex gap-3 items-center bg-slate-100 px-4 py-2 rounded text-gray-600 hover:bg-emerald-300 hover:text-white"
             }
           >
-            <LibraryAddIcon /> <h6>New Application</h6>
+            <LibraryAddIcon /> <h6>New Request</h6>
           </NavLink>
         </li>
         <li className='mb-2'>
@@ -99,7 +99,7 @@ export const ProfileHead = ({ profile }) => {
             }
             end
           >
-            <DescriptionIcon /> <h6>My Applications</h6>
+            <DescriptionIcon /> <h6>My Requests</h6>
           </NavLink>
         </li>
         <li className='mb-2'>

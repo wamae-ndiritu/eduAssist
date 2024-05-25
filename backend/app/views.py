@@ -341,6 +341,15 @@ def get_financial_requests(request):
         # Calculate the date 2 months ago
         two_months_ago = timezone.now() - timedelta(days=60)
 
+        user = request.user
+        if user.user_type == 'donor':
+            # If the user is a donor, return approved financial requests
+            approved_requests = FinancialAidRequest.objects.filter(
+                status='approved').order_by('-created_at')
+            requests_info = [{"id": f_request.id, "profile_pic": f_request.beneficiary.user.profile_pic, "reason_for_aid": f_request.reason_for_aid, "created_at": f_request.created_at,
+                              "full_name": f_request.beneficiary.user.full_name, "institution_name": f_request.beneficiary.institution_name, "status": f_request.status} for f_request in approved_requests]
+            return Response(requests_info, status=status.HTTP_200_OK)
+
         # Filter the FinancialAidRequest objects created up to 2 months ago
         financial_requests = FinancialAidRequest.objects.all().order_by('-created_at')
         requests_info = [{"id": f_request.id, "profile_pic": f_request.beneficiary.user.profile_pic, "reason_for_aid": f_request.reason_for_aid, "created_at": f_request.created_at, "full_name": f_request.beneficiary.user.full_name, "institution_name": f_request.beneficiary.institution_name, "status": f_request.status } for f_request in financial_requests]

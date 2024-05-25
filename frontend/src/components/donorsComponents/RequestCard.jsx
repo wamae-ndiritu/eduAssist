@@ -34,12 +34,16 @@ const RequestCard = ({ info }) => {
           Created {moment(info.created_at).fromNow()}
         </span>
         <Link
-          to={`/financial-requests/${info.id}`}
+          to={`${
+            userInfo?.user?.user_type === "beneficiary"
+              ? `/profile/applications/${info.id}`
+              : `/financial-requests/${info.id}`
+          }`}
           className='bg-blue-400 rounded px-2 py-1 text-white'
         >
           View
         </Link>
-        {userInfo?.user?.user_type === "admin" && (
+        {userInfo?.user?.user_type !== "donor" && (
           <button
             className='bg-red-300 rounded px-2 py-1 text-white'
             onClick={() => handleDelete(info.id)}

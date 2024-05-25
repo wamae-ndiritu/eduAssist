@@ -23,6 +23,7 @@ import UserReviews from "./components/donorsComponents/UserReviews";
 import DonorProfile from "./components/donorsComponents/DonorProfile";
 import DonorsPage from "./components/donorsComponents/DonorsPage";
 import StudentsPage from "./components/donorsComponents/StudentsPage";
+import ApplicationDetails from "./pages/ApplicationDetails";
 
 const ProtectedLayout = () => {
   const { userInfo } = useSelector((state) => state.user);
@@ -47,6 +48,7 @@ function App() {
             element={<NewApplicationPage />}
           />
           <Route path='/profile/applications' element={<ApplicationsPage />} />
+          <Route path='/profile/applications/:id' element={<ApplicationDetails />} />
           <Route path='/profile/messages/:id' element={<MessagesPage />} />
         </Route>
         <Route element={<DashboardLayout />}>

@@ -1,21 +1,37 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { listDonors } from "../../redux/actions/userActions";
+import {
+  approveDisapproveDonor,
+  deleteUser,
+  listDonors,
+} from "../../redux/actions/userActions";
 import Message from "../utils/Message";
 import { resetUserErr } from "../../redux/slices/userSlices";
 
 const DonorsPage = () => {
   const dispatch = useDispatch();
 
-  const { donorsList, loading, error } = useSelector((state) => state.user);
+  const { donorsList, loading, error, deleted, donorStatusUpdated } =
+    useSelector((state) => state.user);
 
   const handleDeleteUser = (id) => {
-    console.log("deleting user...");
+    alert("Are you sure you want to delete the user!");
+    dispatch(deleteUser(id));
+  };
+
+  const handleDonorStatus = (id, actionType) => {
+    dispatch(approveDisapproveDonor(id, actionType));
   };
 
   useEffect(() => {
     dispatch(listDonors());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (donorStatusUpdated || deleted) {
+      dispatch(listDonors());
+    }
+  }, [dispatch, donorStatusUpdated, deleted]);
   return (
     <div>
       <h2 className='my-3 text-2xl font-semibold text-green-500'>Donors</h2>
@@ -24,11 +40,11 @@ const DonorsPage = () => {
         {error && (
           <Message onClose={() => dispatch(resetUserErr())}>{error}</Message>
         )}
-        {/* {deleted && (
-          <span className='flex items-center justify-between my-1 bg-green-100 w-full py-2 px-4 rounded border border-green-400 text-green-700'>
-            <p>User has been deleted successfully!</p>
-          </span>
-        )} */}
+        {deleted && (
+          <Message variant='success' onClose={() => dispatch(resetUserErr())}>
+            User has been deleted successfully!
+          </Message>
+        )}
         <table className='w-max border border-gray-400 text-gray-600'>
           <thead className=''>
             <tr className=''>
@@ -87,10 +103,16 @@ const DonorsPage = () => {
                   </span>
                 </td>
                 <td className='flex gap-1 border-b border-gray-400 p-2'>
-                  <button className='bg-blue-300 text-white rounded px-2 py-1 text-xs'>
+                  <button
+                    className='bg-blue-300 text-white rounded px-2 py-1 text-xs'
+                    onClick={() => handleDonorStatus(donor.id, "approve")}
+                  >
                     Approve
                   </button>
-                  <button className='bg-red-300 text-white rounded px-2 py-1 text-xs'>
+                  <button
+                    className='bg-red-300 text-white rounded px-2 py-1 text-xs'
+                    onClick={() => handleDonorStatus(donor.id, "disapprove")}
+                  >
                     Disapprove
                   </button>
                   <button

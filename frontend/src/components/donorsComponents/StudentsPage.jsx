@@ -1,21 +1,22 @@
 import { useEffect } from "react";
 import {useSelector, useDispatch} from "react-redux";
-import { listBeneficiaries } from "../../redux/actions/userActions";
+import { deleteUser, listBeneficiaries } from "../../redux/actions/userActions";
 import Message from "../utils/Message";
 import { resetUserErr } from "../../redux/slices/userSlices";
 
 const StudentsPage = () => {
   const dispatch = useDispatch();
 
-  const {studentsList, loading, error} = useSelector((state) => state.user);
+  const {studentsList, loading, error, deleted} = useSelector((state) => state.user);
 
   const handleDeleteUser = (id) => {
-    console.log("deleting user...")
+    alert("Are you sure you want to delete the user!")
+    dispatch(deleteUser(id));
   }
 
   useEffect(() => {
     dispatch(listBeneficiaries());
-  }, [dispatch])
+  }, [dispatch, deleted])
   return (
     <div>
       <h2 className='my-3 text-2xl font-semibold text-green-500'>Students</h2>
@@ -24,11 +25,9 @@ const StudentsPage = () => {
         {error && (
           <Message onClose={() => dispatch(resetUserErr())}>{error}</Message>
         )}
-        {/* {deleted && (
-          <span className='flex items-center justify-between my-1 bg-green-100 w-full py-2 px-4 rounded border border-green-400 text-green-700'>
-            <p>User has been deleted successfully!</p>
-          </span>
-        )} */}
+        {deleted && (
+          <Message variant="success" onClose={() => dispatch(resetUserErr())}>User has been deleted successfully!</Message>
+        )}
         <table className='w-max border border-gray-400 text-gray-600'>
           <thead className=''>
             <tr className=''>
@@ -76,7 +75,7 @@ const StudentsPage = () => {
                   </button>
                   <button
                     className='bg-red-500 text-white rounded px-2 py-1 text-xs'
-                    onClick={() => handleDeleteUser(student.user)}
+                    onClick={() => handleDeleteUser(student.id)}
                   >
                     Delete
                   </button>

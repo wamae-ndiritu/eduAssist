@@ -280,6 +280,38 @@ def get_profile_info(request, profile_id):
     return Response({"message": "Invalid request method!"}, status=status.HTTP_400_BAD_REQUEST)
 
 
+# Delete user
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_user(request, profile_id):
+    if request.method == 'DELETE':
+        try:
+            user = CustomUser.objects.get(id=profile_id)
+            user.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except CustomUser.DoesNotExist:
+            return Response({"message": "User not found!"}, status=status.HTTP_404_NOT_FOUND)
+    return Response({"message": "Invalid request method!"}, status=status.HTTP_400_BAD_REQUEST)
+
+# Delete user
+
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def approve_disapprove_donor(request, profile_id):
+    if request.method == 'PATCH':
+        action = request.data.get('action')
+        try:
+            donor = Donor.objects.get(user__id=profile_id)
+            if action == 'approve':
+                donor.status = 'approved'
+            if action == 'disapprove':
+                donor.status = 'rejected'
+            donor.save()
+            return Response(status=status.HTTP_200_OK)
+        except CustomUser.DoesNotExist:
+            return Response({"message": "User not found!"}, status=status.HTTP_404_NOT_FOUND)
+    return Response({"message": "Invalid request method!"}, status=status.HTTP_400_BAD_REQUEST)
 
 # Create Financial aid request
 @api_view(['POST'])
@@ -339,6 +371,20 @@ def get_financial_request(request, request_id):
         return Response(request_info, status=status.HTTP_200_OK)
     except FinancialAidRequest.DoesNotExist:
         return Response({"message": "Not Found!"}, status=status.HTTP_404_NOT_FOUND)
+    
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_financial_request(request, request_id):
+    """
+    Delete Financial
+    """
+    try:
+        financial_request = FinancialAidRequest.objects.get(id=request_id)
+        financial_request.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    except FinancialAidRequest.DoesNotExist:
+        return Response({"message": "Request Not Found!"}, status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['GET'])

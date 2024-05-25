@@ -9,6 +9,8 @@ import {
   getProfileInfoSuccess,
   getDonorsSuccess,
   getStudentsSuccess,
+  deleteUserSuccess,
+  updateDonorStatusSuccess,
 } from "../slices/userSlices";
 import axios from "redaxios";
 import { BASE_URL } from "../../URL";
@@ -44,7 +46,7 @@ export const login = (userData) => async (dispatch) => {
     dispatch(userLoginSuccess(data));
     localStorage.setItem("userInfo", JSON.stringify(data));
   } catch (err) {
-    console.log(err)
+    console.log(err);
     const errMsg = err?.data
       ? err.data.message
         ? err.data.message
@@ -119,7 +121,7 @@ export const updateProfile =
         },
       };
 
-      let profileUpdate = {}
+      let profileUpdate = {};
 
       if (type === "personal") {
         const { data } = await axios.patch(
@@ -170,6 +172,85 @@ export const updateProfile =
     }
   };
 
+// Delete user
+export const deleteUser = (userId) => async (dispatch, getState) => {
+  try {
+    dispatch(usersActionStart());
+
+    const {
+      user: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo?.token?.access}`,
+        "Content-Type": "application/json",
+      },
+    };
+    await axios.delete(
+        `${BASE_URL}/users/${userId}/delete/`,
+        config
+      );
+    dispatch(deleteUserSuccess());
+  } catch (err) {
+    const errMsg =
+      err?.data && err?.data?.length
+        ? err.data[0]?.message
+        : err?.data
+        ? err.data?.message || err.data?.detail
+        : err.statusText;
+    if (
+      errMsg === "Authentication credentials were not provided." ||
+      errMsg === "Given token not valid for any token type"
+    ) {
+      dispatch(logout());
+      dispatch(usersActionFail("Your session has expired! Login again..."));
+    } else {
+      dispatch(usersActionFail(errMsg));
+    }
+  }
+};
+
+
+// Approve or Disapprove donor
+export const approveDisapproveDonor = (userId, type) => async (dispatch, getState) => {
+  try {
+    dispatch(usersActionStart());
+
+    const {
+      user: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo?.token?.access}`,
+        "Content-Type": "application/json",
+      },
+    };
+    await axios.patch(
+      `${BASE_URL}/users/donors/${userId}/approve-disapprove/`,
+      {action: type},
+      config
+    );
+    dispatch(updateDonorStatusSuccess());
+  } catch (err) {
+    const errMsg =
+      err?.data && err?.data?.length
+        ? err.data[0]?.message
+        : err?.data
+        ? err.data?.message || err.data?.detail
+        : err.statusText;
+    if (
+      errMsg === "Authentication credentials were not provided." ||
+      errMsg === "Given token not valid for any token type"
+    ) {
+      dispatch(logout());
+      dispatch(usersActionFail("Your session has expired! Login again..."));
+    } else {
+      dispatch(usersActionFail(errMsg));
+    }
+  }
+};
 
 // Get donors
 export const listDonors = () => async (dispatch, getState) => {
@@ -187,10 +268,7 @@ export const listDonors = () => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.get(
-      `${BASE_URL}/users/donors/`,
-      config
-    );
+    const { data } = await axios.get(`${BASE_URL}/users/donors/`, config);
     dispatch(getDonorsSuccess(data));
   } catch (err) {
     const errMsg =

@@ -9,6 +9,7 @@ const initialState = {
   error: null,
   userInfo: userInfoFromLocalStorage,
   profileInfo: {},
+  donorStatusUpdated: false,
   profileUpdated: false,
   profileUpdates: {
     personal: false,
@@ -18,6 +19,7 @@ const initialState = {
   },
   studentsList: [],
   donorsList: [],
+  deleted: false,
 };
 
 export const userSlice = createSlice({
@@ -41,15 +43,19 @@ export const userSlice = createSlice({
     },
     resetUserErr: (state) => {
       state.error = null;
+      state.deleted = false;
       state.profileUpdates.personal = false;
       state.profileUpdates.institution = false;
       state.profileUpdates.documents = false;
       state.profileUpdates.profile_pic = false;
+      state.donorStatusUpdated = false;
     },
     usersActionStart: (state) => {
       state.loading = true;
       state.error = null;
+      state.deleted = false;
       state.profileUpdated = false;
+      state.donorStatusUpdated = false;
     },
     usersActionFail: (state, action) => {
       state.loading = false;
@@ -70,6 +76,14 @@ export const userSlice = createSlice({
     getDonorsSuccess: (state, action) => {
       state.loading = false;
       state.donorsList = action.payload;
+    },
+    deleteUserSuccess: (state) => {
+      state.loading = false;
+      state.deleted = true;
+    },
+    updateDonorStatusSuccess: (state) => {
+      state.loading = false;
+      state.donorStatusUpdated = true;
     }
   },
 });
@@ -85,7 +99,9 @@ export const {
   updateProfileSuccess,
   getProfileInfoSuccess,
   getDonorsSuccess,
-  getStudentsSuccess
+  getStudentsSuccess,
+  updateDonorStatusSuccess,
+  deleteUserSuccess
 } = userSlice.actions;
 
 export default userSlice.reducer;
